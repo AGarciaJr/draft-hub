@@ -159,6 +159,31 @@ const AdminDashboard: React.FC = () => {
     return sortedGroupedData;
   }, [rawData]); // Dependency on rawData ensures re-grouping if data changes (though unlikely for this file)
 
+  // Calculate scout statistics (e.g., number of players ranked by each scout)
+  const scoutStats = useMemo(() => {
+    const counts: { [scoutName: string]: number } = {};
+
+    // Assuming scoutRankings is available in this scope from the data import
+    if (Array.isArray(rawData.scoutRankings)) {
+        rawData.scoutRankings.forEach((ranking: any) => {
+            Object.entries(ranking).forEach(([key, value]) => {
+                // Exclude playerId and check if the rank value is not null or undefined
+                if (key !== 'playerId' && value != null) {
+                    if (!counts[key]) {
+                        counts[key] = 0;
+                    }
+                    counts[key]++;
+                }
+            });
+        });
+    }
+
+    // Sort scouts alphabetically by name
+    const sortedScouts = Object.entries(counts).sort(([nameA], [nameB]) => nameA.localeCompare(nameB));
+
+    return sortedScouts;
+  }, [rawData.scoutRankings]); // Recalculate if scoutRankings data changes
+
   // Calculate average ranking for a player from grouped data
   const calculateAverageRankRawData = (playerGroupedData: { [category: string]: any[] | any }) => {
     const rankingsArray = playerGroupedData.scoutRankings; // This should be an array with one ranking object
@@ -232,76 +257,106 @@ const AdminDashboard: React.FC = () => {
 
   // Overview Content using MUI Components
   const overviewContent = (
-    <Paper sx={{ p: 3, maxWidth: 600, mx: 'auto' }}>
-      <Typography variant="h5" component="h2" gutterBottom align="center">
-        Player Statistics Overview
-      </Typography>
+    <Box sx={{ px: 2, py: 4, maxWidth: 600, mx: 'auto' }}>
+      {/* Player Statistics Overview */}
+      <Paper sx={{ p: 3, borderRadius: 2, mb: 4 }}>
+        <Typography variant="h5" component="h2" gutterBottom align="center">
+          Player Statistics Overview
+        </Typography>
 
-      <Box sx={{ mt: 3 }}>
-        {/* Basic Stats */}
-        <Accordion elevation={1}>
-          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography variant="subtitle1" fontWeight="bold">Basic Statistics</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Box sx={{ textAlign: 'center', '& p': { mb: 1 } }}>
-              <Typography><Typography component="span" fontWeight="medium">Total Players:</Typography> {stats.totalPlayers}</Typography>
-              <Typography><Typography component="span" fontWeight="medium">Players with Photos:</Typography> {stats.playersWithPhotos}</Typography>
-              <Typography><Typography component="span" fontWeight="medium">Average Height:</Typography> {stats.averageHeight.toFixed(1)} inches</Typography>
-              <Typography><Typography component="span" fontWeight="medium">Average Weight:</Typography> {stats.averageWeight.toFixed(1)} lbs</Typography>
-            </Box>
-          </AccordionDetails>
-        </Accordion>
+        <Box sx={{ mt: 3 }}>
+            {/* Basic Stats */}
+            <Accordion elevation={1}>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography variant="subtitle1" fontWeight="bold">Basic Statistics</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Box sx={{ textAlign: 'center', '& p': { mb: 1 } }}>
+                  <Typography><Typography component="span" fontWeight="medium">Total Players:</Typography> {stats.totalPlayers}</Typography>
+                  <Typography><Typography component="span" fontWeight="medium">Players with Photos:</Typography> {stats.playersWithPhotos}</Typography>
+                  <Typography><Typography component="span" fontWeight="medium">Average Height:</Typography> {stats.averageHeight.toFixed(1)} inches</Typography>
+                  <Typography><Typography component="span" fontWeight="medium">Average Weight:</Typography> {stats.averageWeight.toFixed(1)} lbs</Typography>
+                </Box>
+              </AccordionDetails>
+            </Accordion>
 
-        {/* League Distribution */}
-        <Accordion elevation={1} sx={{ mt: 1 }}>
-          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography variant="subtitle1" fontWeight="bold">League Distribution</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Box sx={{ textAlign: 'center', '& p': { mb: 0.5 } }}>
-              {Object.entries(stats.playersByLeague)
-                .sort(([, a], [, b]) => b - a)
-                .map(([league, count]) => (
-                  <Typography key={league}><Typography component="span" fontWeight="medium">{league}:</Typography> {count} players</Typography>
-                ))}
-            </Box>
-          </AccordionDetails>
-        </Accordion>
+            {/* League Distribution */}
+            <Accordion elevation={1} sx={{ mt: 1 }}>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography variant="subtitle1" fontWeight="bold">League Distribution</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Box sx={{ textAlign: 'center', '& p': { mb: 0.5 } }}>
+                      {Object.entries(stats.playersByLeague)
+                        .sort(([, a], [, b]) => b - a)
+                        .map(([league, count]) => (
+                      <Typography key={league}><Typography component="span" fontWeight="medium">{league}:</Typography> {count} players</Typography>
+                    ))
+                }
+                </Box>
+              </AccordionDetails>
+            </Accordion>
 
-        {/* Nationality Distribution */}
-        <Accordion elevation={1} sx={{ mt: 1 }}>
-          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography variant="subtitle1" fontWeight="bold">Nationality Distribution</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Box sx={{ textAlign: 'center', '& p': { mb: 0.5 } }}>
-              {Object.entries(stats.playersByNationality)
-                .sort(([, a], [, b]) => b - a)
-                .map(([nationality, count]) => (
-                  <Typography key={nationality}><Typography component="span" fontWeight="medium">{nationality}:</Typography> {count} players</Typography>
-                ))}
-            </Box>
-          </AccordionDetails>
-        </Accordion>
+            {/* Nationality Distribution */}
+            <Accordion elevation={1} sx={{ mt: 1 }}>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography variant="subtitle1" fontWeight="bold">Nationality Distribution</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Box sx={{ textAlign: 'center', '& p': { mb: 0.5 } }}>
+                      {Object.entries(stats.playersByNationality)
+                        .sort(([, a], [, b]) => b - a)
+                        .map(([nationality, count]) => (
+                      <Typography key={nationality}><Typography component="span" fontWeight="medium">{nationality}:</Typography> {count} players</Typography>
+                    ))
+                }
+                </Box>
+              </AccordionDetails>
+            </Accordion>
 
-        {/* Age Distribution */}
-        <Accordion elevation={1} sx={{ mt: 1 }}>
-          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography variant="subtitle1" fontWeight="bold">Age Distribution</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Box sx={{ textAlign: 'center', '& p': { mb: 0.5 } }}>
-              {Object.entries(stats.ageDistribution)
-                .sort(([a], [b]) => parseInt(a) - parseInt(b))
-                .map(([age, count]) => (
-                  <Typography key={age}><Typography component="span" fontWeight="medium">Age {age}:</Typography> {count} players</Typography>
-                ))}
-            </Box>
-          </AccordionDetails>
-        </Accordion>
-      </Box>
-    </Paper>
+            {/* Age Distribution */}
+            <Accordion elevation={1} sx={{ mt: 1 }}>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography variant="subtitle1" fontWeight="bold">Age Distribution</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Box sx={{ textAlign: 'center', '& p': { mb: 0.5 } }}>
+                      {Object.entries(stats.ageDistribution)
+                        .sort(([a], [b]) => parseInt(a) - parseInt(b))
+                        .map(([age, count]) => (
+                      <Typography key={age}><Typography component="span" fontWeight="medium">Age {age}:</Typography> {count} players</Typography>
+                    ))
+                }
+                </Box>
+              </AccordionDetails>
+            </Accordion>
+        </Box>
+      </Paper>
+
+      {/* Scout Statistics Overview */}
+      <Paper sx={{ p: 3, borderRadius: 2 }}>
+        <Typography variant="h5" component="h2" gutterBottom align="center">
+          Scout Statistics Overview
+        </Typography>
+        <Box sx={{ mt: 3 }}>
+          {scoutStats.length > 0 ? (
+              scoutStats.map(([scoutName, count]) => (
+                <Accordion key={scoutName} elevation={1} sx={{ mt: 1 }}>
+                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                    <Typography variant="subtitle1" fontWeight="bold">{scoutName}</Typography>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <Typography variant="body2">Players Ranked: {count}</Typography>
+                    {/* Add more scout-specific details here later */}
+                  </AccordionDetails>
+                </Accordion>
+              ))
+          ) : (
+              <Typography>No scout ranking data available.</Typography>
+          )}
+        </Box>
+      </Paper>
+    </Box>
   );
 
   // Raw Data Content
@@ -369,7 +424,7 @@ const AdminDashboard: React.FC = () => {
             const avgRank = calculateAverageRankRawData(playerCategories);
             const rankDisplay = avgRank === Infinity ? 'N/A' : avgRank.toFixed(1);
 
-            return (
+    return (
               <Accordion key={playerId} elevation={1} sx={{ mt: 1 }}>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
@@ -447,15 +502,15 @@ const AdminDashboard: React.FC = () => {
         <Box sx={{ display: 'flex', gap: 2 }}>
           <Button
             variant={activeTab === 'overview' ? 'contained' : 'text'}
-            onClick={() => setActiveTab('overview')}
-          >
-            Overview
+                  onClick={() => setActiveTab('overview')}
+                >
+                  Overview
           </Button>
           <Button
             variant={activeTab === 'players' ? 'contained' : 'text'}
-            onClick={() => setActiveTab('players')}
-          >
-            Players
+                  onClick={() => setActiveTab('players')}
+                >
+                  Players
           </Button>
           {/* Add other tabs here */}
           <Button
