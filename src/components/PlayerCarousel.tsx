@@ -6,7 +6,7 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
 const carouselSettings = {
-  dots: true,
+  dots: false,
   infinite: true,
   speed: 500,
   slidesToShow: 3,
@@ -14,6 +14,8 @@ const carouselSettings = {
   centerMode: true,
   centerPadding: '0',
   focusOnSelect: true,
+  autoplay: true,
+  autoplaySpeed: 2500,
   responsive: [
     {
       breakpoint: 900,
