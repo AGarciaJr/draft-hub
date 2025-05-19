@@ -38,7 +38,8 @@ const PlayerCarousel: React.FC = () => {
           <Box key={player.playerId} px={2}>
             <Card
               sx={{
-                maxWidth: 345,
+                width: 300,
+                height: 480,
                 mx: 'auto',
                 boxShadow: 8,
                 borderRadius: 4,
@@ -47,18 +48,25 @@ const PlayerCarousel: React.FC = () => {
                 transform: 'scale(0.95)',
                 transition: 'transform 0.3s',
                 '&:hover': { transform: 'scale(1.03)' },
+                display: 'flex',
+                flexDirection: 'column',
               }}
             >
               {player.photoUrl && (
                 <CardMedia
                   component="img"
-                  height="260"
+                  sx={{
+                    objectFit: 'contain',
+                    borderTopLeftRadius: 16,
+                    borderTopRightRadius: 16,
+                    width: '100%',
+                    flex: '1 1 auto',
+                  }}
                   image={player.photoUrl}
                   alt={player.name}
-                  sx={{ objectFit: 'cover', borderTopLeftRadius: 16, borderTopRightRadius: 16 }}
                 />
               )}
-              <CardContent>
+              <CardContent sx={{ flex: '0 0 auto', minHeight: 0 }}>
                 <Typography gutterBottom variant="h5" component="div" sx={{ fontWeight: 700, color: '#fff' }}>
                   {player.name}
                 </Typography>
