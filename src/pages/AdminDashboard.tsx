@@ -3,9 +3,15 @@ import { playerDataService } from '../services/playerDataService';
 import { Box, Typography, TextField, Paper, Checkbox, FormControlLabel, Select, MenuItem, Button, Divider, Accordion, AccordionSummary, AccordionDetails, Container } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import type { PlayerBio } from '../types/player.types'; // Assuming types are still needed
+import rawData from '../data/intern_project_data.json'; // Import raw JSON data
+
+// Define a type for the raw data structure if needed, or use a generic type
+interface RawData {
+  [key: string]: any;
+}
 
 const AdminDashboard: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'overview' | 'players' | 'rankings' | 'measurements' | 'gameLogs' | 'seasonLogs' | 'scouting'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'players' | 'rankings' | 'measurements' | 'gameLogs' | 'seasonLogs' | 'scouting' | 'raw' >('overview');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedPlayers, setSelectedPlayers] = useState<number[]>([]);
   const [sortBy, setSortBy] = useState('name-asc');
@@ -151,6 +157,29 @@ const AdminDashboard: React.FC = () => {
     </Paper>
   );
 
+  // Raw Data Content
+  const rawDataContent = (
+    <Box sx={{ p: 2 }}>
+      <Typography variant="h5" component="h2" gutterBottom>Raw Data</Typography>
+      {
+        Object.keys(rawData as RawData).map((key) => (
+          <Accordion key={key} elevation={1} sx={{ mt: 1 }}>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <Typography variant="subtitle1" fontWeight="bold">{key.charAt(0).toUpperCase() + key.slice(1)}</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Box sx={{ overflowX: 'auto' }}>
+                <pre style={{ margin: 0 }}>
+                  <code>{JSON.stringify((rawData as RawData)[key], null, 2)}</code>
+                </pre>
+              </Box>
+            </AccordionDetails>
+          </Accordion>
+        ))
+      }
+    </Box>
+  );
+
   return (
     <Container maxWidth="xl" sx={{ mt: 2 }}>
       {/* Tab Navigation */}
@@ -169,6 +198,12 @@ const AdminDashboard: React.FC = () => {
             Players
           </Button>
           {/* Add other tabs here */}
+          <Button
+            variant={activeTab === 'raw' ? 'contained' : 'text'}
+            onClick={() => setActiveTab('raw')}
+          >
+            Raw Data
+          </Button>
         </Box>
       </Box>
 
@@ -292,6 +327,13 @@ const AdminDashboard: React.FC = () => {
                 </Box>
               </Box>
             </Box>
+          </Box>
+        )
+      }
+      {
+        activeTab === 'raw' && (
+          <Box>
+            {rawDataContent}
           </Box>
         )
       }
