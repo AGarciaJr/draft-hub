@@ -168,12 +168,14 @@ const AdminDashboard: React.FC = () => {
     if (!rankings) return Infinity;
 
     const rankValues: number[] = Object.entries(rankings)
-      .filter(([key]) => key !== 'playerId')
+      .filter(([key]) => key !== 'playerId' && rankings[key] != null) // Filter out null/undefined ranks as well
       .map(([, value]) => Number(value))
       .filter(value => !isNaN(value));
 
-    return rankValues.length > 0
-      ? rankValues.reduce((sum, rank) => sum + rank, 0) / rankValues.length
+    const count = rankValues.length; // This is the number of scouts who provided a valid rank
+
+    return count > 0
+      ? rankValues.reduce((sum, rank) => sum + rank, 0) / count // Sum of valid rankings / Number of valid ranked scouts
       : Infinity;
   };
 
