@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { playerDataService } from '../services/playerDataService';
-import { Box, Typography, TextField, Paper, Checkbox, FormControlLabel, Select, MenuItem, Button, Divider, Accordion, AccordionSummary, AccordionDetails, Container } from '@mui/material';
+import { Box, Typography, TextField, Paper, Checkbox, FormControlLabel, Select, MenuItem, Button, Divider, Accordion, AccordionSummary, AccordionDetails, Container, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import type { PlayerBio } from '../types/player.types'; // Assuming types are still needed
 import rawData from '../data/intern_project_data.json'; // Import raw JSON data
@@ -169,9 +169,41 @@ const AdminDashboard: React.FC = () => {
             </AccordionSummary>
             <AccordionDetails>
               <Box sx={{ overflowX: 'auto' }}>
-                <pre style={{ margin: 0 }}>
-                  <code>{JSON.stringify((rawData as RawData)[key], null, 2)}</code>
-                </pre>
+                {Array.isArray((rawData as RawData)[key]) && (rawData as RawData)[key].length > 0 ? (
+                  <TableContainer component={Paper} sx={{ mt: 2 }}>
+                    <Table size="small">
+                      <TableHead>
+                        <TableRow>
+                          {Object.keys((rawData as RawData)[key][0]).map((header) => (
+                            <TableCell key={header} sx={{ fontWeight: 'bold' }}>
+                              {header}
+                            </TableCell>
+                          ))}
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {(rawData as RawData)[key].map((row: any, rowIndex: number) => (
+                          <TableRow key={rowIndex}>
+                            {Object.values(row).map((cellValue: any, cellIndex: number) => (
+                              <TableCell key={cellIndex}>
+                                {typeof cellValue === 'object' && cellValue !== null
+                                  ? JSON.stringify(cellValue)
+                                  : String(cellValue)}
+                              </TableCell>
+                            ))}
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                ) : (typeof (rawData as RawData)[key] === 'object' && (rawData as RawData)[key] !== null) ? (
+                  // Handle non-array objects or other types
+                   <pre style={{ margin: 0 }}>
+                      <code>{JSON.stringify((rawData as RawData)[key], null, 2)}</code>
+                    </pre>
+                ) : (
+                  <Typography variant="body2">{String((rawData as RawData)[key])}</Typography>
+                )}
               </Box>
             </AccordionDetails>
           </Accordion>
