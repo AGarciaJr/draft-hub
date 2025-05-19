@@ -53,20 +53,21 @@ const PlayerCarousel: React.FC = () => {
               }}
             >
               {player.photoUrl && (
-                <CardMedia
-                  component="img"
-                  sx={{
-                    objectFit: 'contain',
-                    borderTopLeftRadius: 16,
-                    borderTopRightRadius: 16,
-                    width: '100%',
-                    flex: '1 1 auto',
-                  }}
-                  image={player.photoUrl}
-                  alt={player.name}
-                />
+                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 3, mb: 2, width: '100%', overflow: 'hidden', borderTopLeftRadius: 20, borderTopRightRadius: 20 }}>
+                  <CardMedia
+                    component="img"
+                    sx={{
+                      objectFit: 'contain',
+                      borderRadius: '20px 20px 0 0',
+                      width: '100%',
+                      height: 260,
+                    }}
+                    image={player.photoUrl}
+                    alt={player.name}
+                  />
+                </Box>
               )}
-              <CardContent sx={{ flex: '0 0 auto', minHeight: 0 }}>
+              <CardContent sx={{ flex: '0 0 auto', minHeight: 0, p: 2 }}>
                 <Typography gutterBottom variant="h5" component="div" sx={{ fontWeight: 700, color: '#fff' }}>
                   {player.name}
                 </Typography>
