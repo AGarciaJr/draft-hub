@@ -2,7 +2,7 @@ import { ThemeProvider, createTheme, CssBaseline, Container, Typography, Box, Ap
 import { Routes, Route, Link } from 'react-router-dom';
 import PlayerCarousel from './components/PlayerCarousel';
 import BigBoard from './features/draft-board/BigBoard';
-
+import AdminDashboard from './pages/AdminDashboard';
 const theme = createTheme({
   palette: {
     mode: 'light',
@@ -52,10 +52,6 @@ function Home() {
   );
 }
 
-function DraftBoard() {
-  return <Typography variant="h4">Draft Board (Coming Soon)</Typography>;
-}
-
 function Profiles() {
   return <Typography variant="h4">Player Profiles (Coming Soon)</Typography>;
 }
@@ -76,6 +72,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/draft-board" element={<BigBoard />} />
           <Route path="/profiles" element={<Profiles />} />
+          <Route path="/admin" element={<AdminDashboard />} />
         </Routes>
       </Container>
     </ThemeProvider>

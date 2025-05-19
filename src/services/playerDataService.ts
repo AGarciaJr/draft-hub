@@ -22,7 +22,7 @@ class PlayerDataService {
     const rankings = playerData.scoutRankings as ScoutRanking[];
     const measurements = playerData.measurements as PlayerMeasurements[];
     const gameLogs = playerData.game_logs as GameLog[];
-    const seasonLogs = playerData.seasonLogs as SeasonLog[];
+    const seasonLogs = (playerData.seasonLogs as unknown) as SeasonLog[];
     const scoutingReports = playerData.scoutingReports as ScoutingReport[];
 
     const stats: PlayerStats = {
