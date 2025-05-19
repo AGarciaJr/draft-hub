@@ -1,5 +1,6 @@
 import { ThemeProvider, createTheme, CssBaseline, Container, Typography, Box, AppBar, Toolbar, Button } from '@mui/material';
 import { Routes, Route, Link } from 'react-router-dom';
+import PlayerCarousel from './components/PlayerCarousel';
 
 const theme = createTheme({
   palette: {
@@ -45,7 +46,7 @@ function Home() {
       <Typography variant="h5" component="h2" gutterBottom align="center" color="secondary.main">
         The Next Generation of Basketball Superstars
       </Typography>
-      {/* Carousel will go here */}
+      <PlayerCarousel />
     </Box>
   );
 }
