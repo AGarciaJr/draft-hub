@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { playerDataService } from '../services/playerDataService';
-import { Box, Typography, TextField, Paper, Checkbox, FormControlLabel, Select, MenuItem, Button, Divider, Accordion, AccordionSummary, AccordionDetails, Container, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import { Box, Typography, TextField, Paper, Checkbox, FormControlLabel, Select, MenuItem, Button, Divider, Accordion, AccordionSummary, AccordionDetails, Container, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Stack } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import type { PlayerBio } from '../types/player.types'; // Assuming types are still needed
 import rawData from '../data/intern_project_data.json'; // Import raw JSON data
@@ -14,11 +14,17 @@ const AdminDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'overview' | 'players' | 'rankings' | 'measurements' | 'gameLogs' | 'seasonLogs' | 'scouting' | 'raw' >('overview');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedPlayers, setSelectedPlayers] = useState<number[]>([]);
-  const [sortBy, setSortBy] = useState('name-asc');
+  const [sortBy, setSortBy] = useState('avgRank');
   const [filters, setFilters] = useState({
     leagueType: 'All',
     nationality: 'All',
     ageRange: 'All',
+  });
+  const [rawDataSortBy, setRawDataSortBy] = useState<'name' | 'avgRank' | 'id'>('avgRank');
+  const [rawDataFilter, setRawDataFilter] = useState({
+    search: '',
+    leagueType: 'All',
+    nationality: 'All'
   });
 
   const stats = playerDataService.getPlayerStats();
@@ -47,14 +53,41 @@ const AdminDashboard: React.FC = () => {
     return players;
   }, [allPlayers, searchTerm, filters]);
 
-  // Apply sorting
+  // Calculate average ranking for a player from grouped data
+  const calculateAverageRank = (playerGroupedData: { [category: string]: any[] | any }) => {
+    const rankings = playerGroupedData.scoutRankings?.[0]; // Access the first item in the scoutRankings array
+    if (!rankings) return Infinity; // Return Infinity if no rankings object exists
+
+    const rankValues: number[] = Object.entries(rankings)
+      .filter(([key]) => key !== 'playerId')
+      .map(([, value]) => Number(value))
+      .filter(value => !isNaN(value));
+
+    return rankValues.length > 0
+      ? rankValues.reduce((sum, rank) => sum + rank, 0) / rankValues.length
+      : Infinity;
+  };
+
+  // Apply sorting to filtered players
   const sortedPlayers = useMemo(() => {
     let players = [...filteredPlayers];
-    if (sortBy === 'name-asc') {
-      players.sort((a, b) => a.name.localeCompare(b.name));
-    } else if (sortBy === 'name-desc') {
-      players.sort((a, b) => b.name.localeCompare(a.name));
-    } // Add more sorting options here
+    
+    switch (sortBy) {
+      case 'avgRank':
+        players.sort((a, b) => {
+          const rankA = calculateAverageRank(a);
+          const rankB = calculateAverageRank(b);
+          return rankA - rankB;
+        });
+        break;
+      case 'name-asc':
+        players.sort((a, b) => a.name.localeCompare(b.name));
+        break;
+      case 'name-desc':
+        players.sort((a, b) => b.name.localeCompare(a.name));
+        break;
+      // Add more sorting options as needed
+    }
     return players;
   }, [filteredPlayers, sortBy]);
 
@@ -82,6 +115,118 @@ const AdminDashboard: React.FC = () => {
     'All', ...Array.from(new Set(allPlayers.map(player => player.nationality))).sort()
   ], [allPlayers]);
   // Age ranges would need calculation and grouping
+
+  // Group raw data by playerID
+  const groupedRawData = useMemo(() => {
+    const grouped: { [playerId: number]: { [category: string]: any[] | any } } = {};
+
+    Object.keys(rawData as RawData).forEach(category => {
+      const data = (rawData as RawData)[category];
+
+      if (Array.isArray(data)) {
+        data.forEach((item: any) => {
+          if (item.playerId !== undefined) {
+            if (!grouped[item.playerId]) {
+              grouped[item.playerId] = {};
+            }
+            if (!grouped[item.playerId][category]) {
+                 grouped[item.playerId][category] = [];
+            }
+            // If it's an array in the original data, push the item
+            grouped[item.playerId][category].push(item);
+          }
+        });
+      } else if (typeof data === 'object' && data !== null) {
+          // Handle cases where a category might be a single object with playerID
+           if (data.playerId !== undefined) {
+             if (!grouped[data.playerId]) {
+               grouped[data.playerId] = {};
+             }
+             // If it's a single object, assign it directly
+             grouped[data.playerId][category] = data;
+           }
+      }
+       // Note: Data types other than arrays of objects or single objects with playerID will be ignored in this grouping.
+    });
+
+    // Optional: Sort player IDs for consistent display
+    const sortedPlayerIds = Object.keys(grouped).sort((a, b) => parseInt(a) - parseInt(b));
+    const sortedGroupedData: typeof grouped = {};
+    sortedPlayerIds.forEach(id => {
+        sortedGroupedData[parseInt(id)] = grouped[parseInt(id)];
+    });
+
+    return sortedGroupedData;
+  }, [rawData]); // Dependency on rawData ensures re-grouping if data changes (though unlikely for this file)
+
+  // Calculate average ranking for a player from grouped data
+  const calculateAverageRankRawData = (playerGroupedData: { [category: string]: any[] | any }) => {
+    const rankingsArray = playerGroupedData.scoutRankings; // This should be an array with one ranking object
+    if (!Array.isArray(rankingsArray) || rankingsArray.length === 0) return Infinity;
+
+    const rankings = rankingsArray[0]; // Get the single ranking object
+    if (!rankings) return Infinity;
+
+    const rankValues: number[] = Object.entries(rankings)
+      .filter(([key]) => key !== 'playerId')
+      .map(([, value]) => Number(value))
+      .filter(value => !isNaN(value));
+
+    return rankValues.length > 0
+      ? rankValues.reduce((sum, rank) => sum + rank, 0) / rankValues.length
+      : Infinity;
+  };
+
+  // Apply sorting and filtering to raw data
+  const processedRawData = useMemo(() => {
+    let filteredEntries = Object.entries(groupedRawData);
+
+    // Apply filters
+    if (rawDataFilter.search) {
+      filteredEntries = filteredEntries.filter(([_, data]) => {
+        const bio = data.bio?.[0];
+        return bio?.name?.toLowerCase().includes(rawDataFilter.search.toLowerCase());
+      });
+    }
+
+    if (rawDataFilter.leagueType !== 'All') {
+      filteredEntries = filteredEntries.filter(([_, data]) => {
+        const bio = data.bio?.[0];
+        return bio?.leagueType === rawDataFilter.leagueType;
+      });
+    }
+
+    if (rawDataFilter.nationality !== 'All') {
+      filteredEntries = filteredEntries.filter(([_, data]) => {
+        const bio = data.bio?.[0];
+        return bio?.nationality === rawDataFilter.nationality;
+      });
+    }
+
+    // Sort the filtered data
+    filteredEntries.sort(([idA, dataA], [idB, dataB]) => {
+      const bioA = dataA.bio?.[0];
+      const bioB = dataB.bio?.[0];
+
+      switch (rawDataSortBy) {
+        case 'name':
+          return (bioA?.name || '').localeCompare(bioB?.name || '');
+        case 'avgRank':
+          // Use the specific raw data average rank calculation
+          const avgRankA = calculateAverageRankRawData(dataA);
+          const avgRankB = calculateAverageRankRawData(dataB);
+          // console.log(`Comparing Player ${idA} (Avg Rank: ${avgRankA}) with Player ${idB} (Avg Rank: ${avgRankB})`); // Remove console.log after debugging
+          return avgRankA - avgRankB;
+        case 'id':
+          return parseInt(idA) - parseInt(idB);
+        default:
+          return 0;
+      }
+    });
+
+    // Return the sorted array directly
+    return filteredEntries;
+  }, [groupedRawData, rawDataSortBy, rawDataFilter]);
 
   // Overview Content using MUI Components
   const overviewContent = (
@@ -160,54 +305,135 @@ const AdminDashboard: React.FC = () => {
   // Raw Data Content
   const rawDataContent = (
     <Box sx={{ p: 2 }}>
-      <Typography variant="h5" component="h2" gutterBottom>Raw Data</Typography>
+      <Typography variant="h5" component="h2" gutterBottom>Raw Data by Player</Typography>
+      
+      {/* Controls */}
+      <Stack direction="row" spacing={2} sx={{ mb: 3 }}>
+        <TextField
+          size="small"
+          label="Search Players"
+          value={rawDataFilter.search}
+          onChange={(e) => setRawDataFilter(prev => ({ ...prev, search: e.target.value }))}
+          sx={{ width: 200 }}
+        />
+        
+        <Select
+          size="small"
+          value={rawDataFilter.leagueType}
+          onChange={(e) => setRawDataFilter(prev => ({ ...prev, leagueType: e.target.value }))}
+          sx={{ width: 150 }}
+        >
+          <MenuItem value="All">All Leagues</MenuItem>
+          {uniqueLeagueTypes.filter(type => type !== 'All').map(type => (
+            <MenuItem key={type} value={type}>{type}</MenuItem>
+          ))}
+        </Select>
+
+        <Select
+          size="small"
+          value={rawDataFilter.nationality}
+          onChange={(e) => setRawDataFilter(prev => ({ ...prev, nationality: e.target.value }))}
+          sx={{ width: 150 }}
+        >
+          <MenuItem value="All">All Nationalities</MenuItem>
+          {uniqueNationalities.filter(nat => nat !== 'All').map(nat => (
+            <MenuItem key={nat} value={nat}>{nat}</MenuItem>
+          ))}
+        </Select>
+
+        <Select
+          size="small"
+          value={rawDataSortBy}
+          onChange={(e) => setRawDataSortBy(e.target.value as 'name' | 'avgRank' | 'id')}
+          sx={{ width: 150 }}
+        >
+          <MenuItem value="avgRank">Sort by Avg Rank</MenuItem>
+          <MenuItem value="name">Sort by Name</MenuItem>
+          <MenuItem value="id">Sort by ID</MenuItem>
+        </Select>
+      </Stack>
+
+      {/* Results count */}
+      <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+        Showing {processedRawData.length} players
+      </Typography>
+
+      {/* Player list */}
       {
-        Object.keys(rawData as RawData).map((key) => (
-          <Accordion key={key} elevation={1} sx={{ mt: 1 }}>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography variant="subtitle1" fontWeight="bold">{key.charAt(0).toUpperCase() + key.slice(1)}</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Box sx={{ overflowX: 'auto' }}>
-                {Array.isArray((rawData as RawData)[key]) && (rawData as RawData)[key].length > 0 ? (
-                  <TableContainer component={Paper} sx={{ mt: 2 }}>
-                    <Table size="small">
-                      <TableHead>
-                        <TableRow>
-                          {Object.keys((rawData as RawData)[key][0]).map((header) => (
-                            <TableCell key={header} sx={{ fontWeight: 'bold' }}>
-                              {header}
-                            </TableCell>
-                          ))}
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {(rawData as RawData)[key].map((row: any, rowIndex: number) => (
-                          <TableRow key={rowIndex}>
-                            {Object.values(row).map((cellValue: any, cellIndex: number) => (
-                              <TableCell key={cellIndex}>
-                                {typeof cellValue === 'object' && cellValue !== null
-                                  ? JSON.stringify(cellValue)
-                                  : String(cellValue)}
-                              </TableCell>
-                            ))}
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-                ) : (typeof (rawData as RawData)[key] === 'object' && (rawData as RawData)[key] !== null) ? (
-                  // Handle non-array objects or other types
-                   <pre style={{ margin: 0 }}>
-                      <code>{JSON.stringify((rawData as RawData)[key], null, 2)}</code>
-                    </pre>
-                ) : (
-                  <Typography variant="body2">{String((rawData as RawData)[key])}</Typography>
-                )}
-              </Box>
-            </AccordionDetails>
-          </Accordion>
-        ))
+        processedRawData.length > 0 ? (
+          processedRawData.map(([playerId, playerCategories]) => {
+            const playerBio = Array.isArray(playerCategories.bio) ? playerCategories.bio[0] : null;
+            const playerName = playerBio?.name || `Player ${playerId}`;
+            const avgRank = calculateAverageRankRawData(playerCategories);
+            const rankDisplay = avgRank === Infinity ? 'N/A' : avgRank.toFixed(1);
+
+            return (
+              <Accordion key={playerId} elevation={1} sx={{ mt: 1 }}>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <Typography variant="subtitle1" fontWeight="bold">{playerName}</Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      (ID: {playerId} | Avg Rank: {rankDisplay})
+                    </Typography>
+                  </Box>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Box>
+                    {
+                      Object.keys(playerCategories).map((category) => {
+                        const categoryData = playerCategories[category];
+
+                        return (
+                          <Box key={category} sx={{ mb: 2 }}>
+                             <Typography variant="h6" component="h3" gutterBottom>{category.charAt(0).toUpperCase() + category.slice(1)} Data</Typography>
+                             {
+                                Array.isArray(categoryData) && categoryData.length > 0 ? (
+                                  <TableContainer component={Paper} sx={{ mt: 1 }}>
+                                    <Table size="small">
+                                      <TableHead>
+                                        <TableRow>
+                                          {Object.keys(categoryData[0]).map((header) => (
+                                            <TableCell key={header} sx={{ fontWeight: 'bold' }}>
+                                              {header}
+                                            </TableCell>
+                                          ))}
+                                        </TableRow>
+                                      </TableHead>
+                                      <TableBody>
+                                        {categoryData.map((row: any, rowIndex: number) => (
+                                          <TableRow key={rowIndex}>
+                                            {Object.values(row).map((cellValue: any, cellIndex: number) => (
+                                              <TableCell key={cellIndex}>
+                                                {typeof cellValue === 'object' && cellValue !== null
+                                                  ? JSON.stringify(cellValue, null, 2)
+                                                  : String(cellValue)}
+                                              </TableCell>
+                                            ))}
+                                          </TableRow>
+                                        ))}
+                                      </TableBody>
+                                    </Table>
+                                  </TableContainer>
+                                ) : (typeof categoryData === 'object' && categoryData !== null) ? (
+                                   <pre style={{ margin: 0, overflowX: 'auto' }}>
+                                      <code>{JSON.stringify(categoryData, null, 2)}</code>
+                                    </pre>
+                                ) : (
+                                  <Typography variant="body2">{String(categoryData)}</Typography>
+                                )
+                             }
+                          </Box>
+                        );
+                      })
+                    }
+                  </Box>
+                </AccordionDetails>
+              </Accordion>
+            );
+          })
+        ) : (
+          <Typography>No players match the current filters.</Typography>
+        )
       }
     </Box>
   );
@@ -303,9 +529,9 @@ const AdminDashboard: React.FC = () => {
 
                 <Typography variant="h6" sx={{ ml: 'auto' }}>Sort by:</Typography>
                 <Select size="small" value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
-                   <MenuItem value="name-asc">Name - ascending</MenuItem>
-                   <MenuItem value="name-desc">Name - descending</MenuItem>
-                   {/* Add other sort options */} 
+                  <MenuItem value="avgRank">Average Rank</MenuItem>
+                  <MenuItem value="name-asc">Name - ascending</MenuItem>
+                  <MenuItem value="name-desc">Name - descending</MenuItem>
                 </Select>
 
                 <Typography variant="h6" sx={{ ml: 2 }}>Parties in this search:</Typography>
