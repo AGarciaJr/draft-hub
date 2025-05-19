@@ -1,6 +1,7 @@
 import { ThemeProvider, createTheme, CssBaseline, Container, Typography, Box, AppBar, Toolbar, Button } from '@mui/material';
 import { Routes, Route, Link } from 'react-router-dom';
 import PlayerCarousel from './components/PlayerCarousel';
+import BigBoard from './features/draft-board/BigBoard';
 
 const theme = createTheme({
   palette: {
@@ -73,7 +74,7 @@ function App() {
       <Container maxWidth="xl">
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/draft-board" element={<DraftBoard />} />
+          <Route path="/draft-board" element={<BigBoard />} />
           <Route path="/profiles" element={<Profiles />} />
         </Routes>
       </Container>
