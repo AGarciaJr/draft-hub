@@ -1,11 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { playerDataService } from '../services/playerDataService';
 import { Box, Typography, Paper, Container, Divider } from '@mui/material';
+import ScoutingReportForm from '../components/ScoutingReportForm';
+
+interface ScoutingReport {
+  user: string;
+  report: string;
+  date: string;
+}
 
 const PlayerProfile: React.FC = () => {
   const { playerId } = useParams();
   const player = playerDataService.getPlayerById(Number(playerId));
+  const [scoutingReports, setScoutingReports] = useState<ScoutingReport[]>([]);
 
   if (!player) {
     return (
@@ -151,6 +159,11 @@ const PlayerProfile: React.FC = () => {
           </Box>
         </Box>
       </Paper>
+      <ScoutingReportForm
+        playerId={Number(player.playerId)}
+        reports={scoutingReports}
+        setReports={setScoutingReports}
+      />
     </Container>
   );
 };
