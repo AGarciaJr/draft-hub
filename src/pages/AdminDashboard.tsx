@@ -2,12 +2,22 @@ import React, { useState, useMemo } from 'react';
 import { playerDataService } from '../services/playerDataService';
 import { Box, Typography, TextField, Paper, Checkbox, FormControlLabel, Select, MenuItem, Button, Divider, Accordion, AccordionSummary, AccordionDetails, Container, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Stack } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import type { PlayerBio } from '../types/player.types'; // Assuming types are still needed
 import rawData from '../data/intern_project_data.json'; // Import raw JSON data
 
 // Define a type for the raw data structure if needed, or use a generic type
 interface RawData {
   [key: string]: any;
+}
+
+// Define interfaces for scout data types
+interface ScoutData {
+  rankedCount: number;
+  reports: any[];
+}
+
+interface ScoutStat {
+  scoutName: string;
+  scoutData: ScoutData;
 }
 
 const AdminDashboard: React.FC = () => {
@@ -107,7 +117,7 @@ const AdminDashboard: React.FC = () => {
 
   const isAllSelected = selectedPlayers.length === sortedPlayers.length && sortedPlayers.length > 0;
 
-  // Example data for facets (you would generate these from your allPlayers data)
+  // Example data for facets (you would generate these from the allPlayers data)
   const uniqueLeagueTypes = useMemo(() => [
     'All', ...Array.from(new Set(allPlayers.map(player => player.leagueType))).sort()
   ], [allPlayers]);
@@ -160,45 +170,49 @@ const AdminDashboard: React.FC = () => {
   }, [rawData]); // Dependency on rawData ensures re-grouping if data changes (though unlikely for this file)
 
   // Calculate scout statistics for the five specific scouts (ranked count and reports)
-  const scoutStats = useMemo(() => {
-    const specificScouts = ['ESPN', 'Sam Vecenie', 'Kevin O\'Connor', 'Kyle Boone', 'Gary Parrish'];
-    const stats: { [scoutName: string]: { rankedCount: number, reports: any[] } } = {};
+  const scoutStats: ScoutStat[] = useMemo(() => {
+    const specificScouts = ['ESPN Rank', 'Sam Vecenie Rank', 'Kevin O\'Connor Rank', 'Kyle Boone Rank', 'Gary Parrish Rank'];
+    const stats: { [scoutName: string]: ScoutData } = {};
 
     // Initialize stats for the specific scouts
-    specificScouts.forEach(scoutName => {
-      stats[scoutName] = { rankedCount: 0, reports: [] };
+    specificScouts.forEach(scoutKey => {
+      stats[scoutKey] = { rankedCount: 0, reports: [] };
     });
 
-    // Process rankings for the specific scouts
+    // Process rankings to count how many players each scout ranked
     if (Array.isArray(rawData.scoutRankings)) {
-        rawData.scoutRankings.forEach((ranking: any) => {
-            Object.entries(ranking).forEach(([key, value]) => {
-                // Check if the key is one of the specific scouts and the rank is not null/undefined
-                if (specificScouts.includes(key) && value != null) {
-                    if (stats[key]) { // Ensure the scout was initialized
-                         stats[key].rankedCount++;
-                    }
-                }
-            });
+      rawData.scoutRankings.forEach((playerRankingEntry: any) => {
+        specificScouts.forEach(scoutKey => {
+          const hasScoutKey = playerRankingEntry.hasOwnProperty(scoutKey);
+          const isRankNotNull = playerRankingEntry[scoutKey] != null;
+          if (hasScoutKey && isRankNotNull) {
+            stats[scoutKey].rankedCount++;
+          }
         });
+      });
     }
 
     // Process reports for the specific scouts
     if (Array.isArray(rawData.scoutingReports)) {
-        rawData.scoutingReports.forEach((report: any) => {
-            const scoutName = report.scout;
-            if (scoutName && specificScouts.includes(scoutName)) {
-                 if (stats[scoutName]) { // Ensure the scout was initialized
-                     stats[scoutName].reports.push(report);
-                 }
-            }
-        });
+      rawData.scoutingReports.forEach((report: any) => {
+        const scoutNameFromReport = report.scout;
+        // Find the corresponding key in specificScouts array
+        const scoutKey = specificScouts.find(key => 
+          key.startsWith(scoutNameFromReport.replace(' Rank', ''))
+        );
+
+        if (scoutKey && stats[scoutKey]) {
+          stats[scoutKey].reports.push(report);
+        }
+      });
     }
 
-    // Return stats as an array of [scoutName, scoutData] for easy mapping in JSX
-    return specificScouts.map(scoutName => [scoutName, stats[scoutName]]);
-
-  }, [rawData.scoutRankings, rawData.scoutingReports]); // Recalculate if scoutRankings or scoutingReports data changes
+    // Return stats as an array of objects { scoutName (display name), scoutData }
+    return specificScouts.map(scoutKey => ({
+      scoutName: scoutKey.replace(' Rank', ''),
+      scoutData: stats[scoutKey]
+    }));
+  }, [rawData.scoutRankings, rawData.scoutingReports]);
 
   // Calculate average ranking for a player from grouped data
   const calculateAverageRankRawData = (playerGroupedData: { [category: string]: any[] | any }) => {
@@ -355,40 +369,36 @@ const AdminDashboard: React.FC = () => {
           Scout Statistics Overview
         </Typography>
         <Box sx={{ mt: 3 }}>
-          {scoutStats.length > 0 ? (
-              scoutStats.map(([scoutName, scoutData]) => (
-                <Accordion key={scoutName} elevation={1} sx={{ mt: 1 }}>
-                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    <Typography variant="subtitle1" fontWeight="bold">{scoutName}</Typography>
-                  </AccordionSummary>
-                  <AccordionDetails>
-                    <Typography variant="body2" sx={{ mb: 1 }}>Players Ranked: {scoutData.rankedCount}</Typography>
-                    
-                    {/* Scouting Reports Section */}
-                    {scoutData.reports.length > 0 ? (
-                        <Box sx={{ mt: 1, pl: 2, borderLeft: '2px solid #eee' }}>
-                            <Typography variant="subtitle2" fontWeight="bold" gutterBottom>Scouting Reports ({scoutData.reports.length})</Typography>
-                            <Box>
-                                {scoutData.reports.map((report: any, index: number) => (
-                                    <Box key={report.reportId || index} sx={{ mb: 2, pb: 2, borderBottom: '1px solid #eee' }}>
-                                        <Typography variant="body2" fontWeight="medium">Player ID: {report.playerId}</Typography>
-                                        <Typography variant="body2" color="text.secondary">Report:</Typography>
-                                        <Typography variant="body2">{report.report}</Typography>
-                                    </Box>
-                                ))}
-                            </Box>
+          {scoutStats.map(({ scoutName, scoutData }) => (
+            <Accordion key={scoutName} elevation={1} sx={{ mt: 1 }}>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography variant="subtitle1" fontWeight="bold">{scoutName}</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Typography variant="body2" sx={{ mb: 1 }}>Players Ranked: {scoutData?.rankedCount ?? 0}</Typography>
+                
+                {/* Scouting Reports Section */}
+                {scoutData?.reports && scoutData.reports.length > 0 ? (
+                    <Box sx={{ mt: 1, pl: 2, borderLeft: '2px solid #eee' }}>
+                        <Typography variant="subtitle2" fontWeight="bold" gutterBottom>Scouting Reports ({scoutData.reports.length})</Typography>
+                        <Box>
+                            {scoutData.reports.map((report: any, index: number) => (
+                                <Box key={report.reportId || index} sx={{ mb: 2, pb: 2, borderBottom: '1px solid #eee' }}>
+                                    <Typography variant="body2" fontWeight="medium">Player ID: {report.playerId}</Typography>
+                                    <Typography variant="body2" color="text.secondary">Report:</Typography>
+                                    <Typography variant="body2">{report.report}</Typography>
+                                </Box>
+                            ))}
                         </Box>
-                    ) : (
-                        <Typography variant="body2" color="text.secondary">No scouting reports available for this scout.</Typography>
-                    )}
+                    </Box>
+                ) : (scoutData && (
+                    <Typography variant="body2" color="text.secondary">No scouting reports available for this scout.</Typography>
+                ))}
 
-                    {/* Add more scout-specific details here later */}
-                  </AccordionDetails>
-                </Accordion>
-              ))
-          ) : (
-              <Typography>No scout data available.</Typography>
-          )}
+                {/* Add more scout-specific details here later */}
+              </AccordionDetails>
+            </Accordion>
+          ))}
         </Box>
       </Paper>
     </Box>
@@ -535,6 +545,7 @@ const AdminDashboard: React.FC = () => {
       {/* Tab Navigation */}
       <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 2 }}>
         <Box sx={{ display: 'flex', gap: 2 }}>
+          {/* Add other tabs here */}
           <Button
             variant={activeTab === 'overview' ? 'contained' : 'text'}
                   onClick={() => setActiveTab('overview')}
@@ -547,7 +558,6 @@ const AdminDashboard: React.FC = () => {
                 >
                   Players
           </Button>
-          {/* Add other tabs here */}
           <Button
             variant={activeTab === 'raw' ? 'contained' : 'text'}
             onClick={() => setActiveTab('raw')}

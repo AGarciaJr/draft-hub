@@ -160,7 +160,7 @@ const BigBoard: React.FC = () => {
                 <Typography variant="h6" sx={{ fontWeight: 700 }}>Rank {idx + 1}</Typography>
                 {/* Placeholder for team logo/icon */}
                 <Typography variant="h6" sx={{ fontWeight: 700 }}>{player.name}</Typography>
-                <Typography variant="body1">{player.position} • {player.currentTeam}</Typography>
+                {/* <Typography variant="body1">{player.position} • {player.currentTeam}</Typography> */}
               </Box>
 
               {/* Player Main Content */}
