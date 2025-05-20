@@ -3,6 +3,9 @@ import { Routes, Route, Link } from 'react-router-dom';
 import PlayerCarousel from './components/PlayerCarousel';
 import BigBoard from './features/draft-board/BigBoard';
 import AdminDashboard from './pages/AdminDashboard';
+import ProfilesPage from './pages/ProfilesPage';
+import PlayerProfile from './pages/PlayerProfile';
+
 const theme = createTheme({
   palette: {
     mode: 'light',
@@ -52,10 +55,6 @@ function Home() {
   );
 }
 
-function Profiles() {
-  return <Typography variant="h4">Player Profiles (Coming Soon)</Typography>;
-}
-
 function App() {
   return (
     <ThemeProvider theme={theme}>
@@ -71,8 +70,11 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/draft-board" element={<BigBoard />} />
-          <Route path="/profiles" element={<Profiles />} />
+          
           <Route path="/admin" element={<AdminDashboard />} />
+          
+          <Route path="/profiles" element={<ProfilesPage />} />
+          <Route path="/profiles/:playerId" element={<PlayerProfile />} />
         </Routes>
       </Container>
     </ThemeProvider>
