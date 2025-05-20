@@ -1,12 +1,7 @@
 // src/components/ScoutingReportForm.tsx
 import React, { useState } from 'react';
-import { Paper, TextField, Button, Typography, Box, List, ListItem, Divider } from '@mui/material';
-
-interface ScoutingReport {
-  user: string;
-  report: string;
-  date: string;
-}
+import { Paper, TextField, Button, Typography, Box } from '@mui/material';
+import type { ScoutingReport } from '../types/player.types';
 
 interface Props {
   playerId: number;
@@ -21,9 +16,16 @@ const ScoutingReportForm: React.FC<Props> = ({ playerId, reports, setReports }) 
     if (!text.trim()) return;
 
     const newReport: ScoutingReport = {
+      reportId: `report_${Date.now()}`, // Generate a unique ID
+      playerId: playerId,
+      scout: "Alejandro", // You could replace with actual user context
       user: "Alejandro", // You could replace with actual user context
       report: text.trim(),
-      date: new Date().toISOString()
+      date: new Date().toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      })
     };
 
     setReports([...reports, newReport]);
@@ -34,7 +36,7 @@ const ScoutingReportForm: React.FC<Props> = ({ playerId, reports, setReports }) 
     <Box sx={{ mt: 4 }}>
       <Paper elevation={3} sx={{ p: 3, mb: 3 }}>
         <Typography variant="h6" gutterBottom>
-          Add Scouting Report
+          New Scouting Report
         </Typography>
         <TextField
           fullWidth
@@ -55,32 +57,6 @@ const ScoutingReportForm: React.FC<Props> = ({ playerId, reports, setReports }) 
           Save Report
         </Button>
       </Paper>
-
-      {reports.length > 0 && (
-        <Paper elevation={3} sx={{ p: 3 }}>
-          <Typography variant="h6" gutterBottom>
-            Scouting Reports
-          </Typography>
-          <List>
-            {reports.map((report, index) => (
-              <React.Fragment key={index}>
-                <ListItem sx={{ display: 'block', py: 2 }}>
-                  <Typography variant="subtitle1" component="div" sx={{ fontWeight: 'bold' }}>
-                    {report.user}
-                  </Typography>
-                  <Typography variant="body1" sx={{ mt: 1 }}>
-                    {report.report}
-                  </Typography>
-                  <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 1 }}>
-                    {new Date(report.date).toLocaleString()}
-                  </Typography>
-                </ListItem>
-                {index < reports.length - 1 && <Divider />}
-              </React.Fragment>
-            ))}
-          </List>
-        </Paper>
-      )}
     </Box>
   );
 };
