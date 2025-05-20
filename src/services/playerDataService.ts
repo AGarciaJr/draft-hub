@@ -232,6 +232,13 @@ class PlayerDataService {
       playerIdsWithReports.has(player.playerId)
     );
   }
+
+  public getScoutingReportsByPlayerId(playerId: number): ScoutingReport[] {
+    return this.data.data.scoutingReports.filter(
+      report => report.playerId === playerId
+    );
+  }
+  
 }
 
 // Export a singleton instance
