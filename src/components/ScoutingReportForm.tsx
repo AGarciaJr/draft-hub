@@ -1,5 +1,6 @@
 // src/components/ScoutingReportForm.tsx
 import React, { useState } from 'react';
+import { Paper, TextField, Button, Typography, Box, List, ListItem, Divider } from '@mui/material';
 
 interface ScoutingReport {
   user: string;
@@ -30,31 +31,57 @@ const ScoutingReportForm: React.FC<Props> = ({ playerId, reports, setReports }) 
   };
 
   return (
-    <div className="p-4 border rounded-md mt-4">
-      <h2 className="text-lg font-semibold mb-2">Add Scouting Report</h2>
-      <textarea
-        className="w-full border p-2 rounded"
-        rows={4}
-        value={text}
-        onChange={e => setText(e.target.value)}
-        placeholder="Write your scouting report..."
-      />
-      <button
-        className="mt-2 bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"
-        onClick={handleSubmit}
-      >
-        Save
-      </button>
-      <ul className="mt-4 space-y-2">
-        {reports.map((r, i) => (
-          <li key={i} className="bg-gray-100 p-2 rounded">
-            <strong>{r.user}</strong>: {r.report}
-            <br />
-            <span className="text-sm text-gray-500">{new Date(r.date).toLocaleString()}</span>
-          </li>
-        ))}
-      </ul>
-    </div>
+    <Box sx={{ mt: 4 }}>
+      <Paper elevation={3} sx={{ p: 3, mb: 3 }}>
+        <Typography variant="h6" gutterBottom>
+          Add Scouting Report
+        </Typography>
+        <TextField
+          fullWidth
+          multiline
+          rows={4}
+          value={text}
+          onChange={e => setText(e.target.value)}
+          placeholder="Write your scouting report..."
+          variant="outlined"
+          sx={{ mb: 2 }}
+        />
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleSubmit}
+          disabled={!text.trim()}
+        >
+          Save Report
+        </Button>
+      </Paper>
+
+      {reports.length > 0 && (
+        <Paper elevation={3} sx={{ p: 3 }}>
+          <Typography variant="h6" gutterBottom>
+            Scouting Reports
+          </Typography>
+          <List>
+            {reports.map((report, index) => (
+              <React.Fragment key={index}>
+                <ListItem sx={{ display: 'block', py: 2 }}>
+                  <Typography variant="subtitle1" component="div" sx={{ fontWeight: 'bold' }}>
+                    {report.user}
+                  </Typography>
+                  <Typography variant="body1" sx={{ mt: 1 }}>
+                    {report.report}
+                  </Typography>
+                  <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 1 }}>
+                    {new Date(report.date).toLocaleString()}
+                  </Typography>
+                </ListItem>
+                {index < reports.length - 1 && <Divider />}
+              </React.Fragment>
+            ))}
+          </List>
+        </Paper>
+      )}
+    </Box>
   );
 };
 
