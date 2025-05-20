@@ -4,21 +4,60 @@ import { Box, Typography, TextField, Paper, Checkbox, FormControlLabel, Select, 
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import rawData from '../data/intern_project_data.json'; // Import raw JSON data
 
-// Define a type for the raw data structure if needed, or use a generic type
+// Add ScoutRanking interface
+interface ScoutRanking {
+  playerId: number;
+  [scoutName: string]: number | string | null;
+}
+
+// Update ScoutReport interface
+interface ScoutReport {
+  scout: string;
+  reportId: string; // Changed from number to string based on the actual data
+  playerId: number;
+  report: string;
+  [key: string]: unknown;
+}
+
+// Update RawData interface
 interface RawData {
-  [key: string]: any;
+  scoutRankings: ScoutRanking[];
+  scoutingReports: ScoutReport[];
+  bio: PlayerBio[];
+  [key: string]: unknown;
+}
+
+// Update PlayerBio interface
+interface PlayerBio {
+  playerId: number;
+  name: string;
+  leagueType: string;
+  nationality: string;
+  height?: number;
+  weight?: number;
+  photoUrl?: string;
+  class?: string;
+  age?: number;
+  currentTeam?: string;
+  league?: string;
+  [key: string]: unknown;
 }
 
 // Define interfaces for scout data types
 interface ScoutData {
   rankedCount: number;
-  reports: any[];
+  reports: ScoutReport[];
 }
 
 interface ScoutStat {
   scoutName: string;
   scoutData: ScoutData;
 }
+
+type GroupedPlayerData = {
+   [category: string]: ScoutRanking[] | Record<string, unknown> 
+  };
+
 
 const AdminDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'overview' | 'players' | 'rankings' | 'measurements' | 'gameLogs' | 'seasonLogs' | 'scouting' | 'raw' >('overview');
@@ -64,9 +103,9 @@ const AdminDashboard: React.FC = () => {
   }, [allPlayers, searchTerm, filters]);
 
   // Calculate average ranking for a player from grouped data
-  const calculateAverageRank = (playerGroupedData: { [category: string]: any[] | any }) => {
-    const rankings = playerGroupedData.scoutRankings?.[0]; // Access the first item in the scoutRankings array
-    if (!rankings) return Infinity; // Return Infinity if no rankings object exists
+  const calculateAverageRank = (playerGroupedData: { scoutRankings?: ScoutRanking[] } & { [category: string]: unknown[] | unknown }) => {
+    const rankings = playerGroupedData.scoutRankings?.[0];
+    if (!rankings) return Infinity;
 
     const rankValues: number[] = Object.entries(rankings)
       .filter(([key]) => key !== 'playerId')
@@ -80,13 +119,13 @@ const AdminDashboard: React.FC = () => {
 
   // Apply sorting to filtered players
   const sortedPlayers = useMemo(() => {
-    let players = [...filteredPlayers];
+    const players = [...filteredPlayers];
     
     switch (sortBy) {
       case 'avgRank':
         players.sort((a, b) => {
-          const rankA = calculateAverageRank(a);
-          const rankB = calculateAverageRank(b);
+          const rankA = calculateAverageRank(a as unknown as { [category: string]: unknown[] | unknown });
+          const rankB = calculateAverageRank(b as unknown as { [category: string]: unknown[] | unknown });
           return rankA - rankB;
         });
         break;
@@ -96,7 +135,6 @@ const AdminDashboard: React.FC = () => {
       case 'name-desc':
         players.sort((a, b) => b.name.localeCompare(a.name));
         break;
-      // Add more sorting options as needed
     }
     return players;
   }, [filteredPlayers, sortBy]);
@@ -126,48 +164,38 @@ const AdminDashboard: React.FC = () => {
   ], [allPlayers]);
   // Age ranges would need calculation and grouping
 
-  // Group raw data by playerID
+  // Update the groupedRawData type and data handling
   const groupedRawData = useMemo(() => {
-    const grouped: { [playerId: number]: { [category: string]: any[] | any } } = {};
+    const grouped: { [playerId: number]: { [category: string]: unknown[] | unknown } } = {};
 
-    Object.keys(rawData as RawData).forEach(category => {
-      const data = (rawData as RawData)[category];
+    Object.keys(rawData as unknown as RawData).forEach(category => {
+      const data = (rawData as unknown as RawData)[category];
 
       if (Array.isArray(data)) {
-        data.forEach((item: any) => {
+        data.forEach((item: { playerId?: number }) => {
           if (item.playerId !== undefined) {
             if (!grouped[item.playerId]) {
               grouped[item.playerId] = {};
             }
             if (!grouped[item.playerId][category]) {
-                 grouped[item.playerId][category] = [];
+              grouped[item.playerId][category] = [];
             }
-            // If it's an array in the original data, push the item
-            grouped[item.playerId][category].push(item);
+            (grouped[item.playerId][category] as unknown[]).push(item);
           }
         });
       } else if (typeof data === 'object' && data !== null) {
-          // Handle cases where a category might be a single object with playerID
-           if (data.playerId !== undefined) {
-             if (!grouped[data.playerId]) {
-               grouped[data.playerId] = {};
-             }
-             // If it's a single object, assign it directly
-             grouped[data.playerId][category] = data;
-           }
+        const typedData = data as { playerId?: number };
+        if (typedData.playerId !== undefined) {
+          if (!grouped[typedData.playerId]) {
+            grouped[typedData.playerId] = {};
+          }
+          grouped[typedData.playerId][category] = data;
+        }
       }
-       // Note: Data types other than arrays of objects or single objects with playerID will be ignored in this grouping.
     });
 
-    // Optional: Sort player IDs for consistent display
-    const sortedPlayerIds = Object.keys(grouped).sort((a, b) => parseInt(a) - parseInt(b));
-    const sortedGroupedData: typeof grouped = {};
-    sortedPlayerIds.forEach(id => {
-        sortedGroupedData[parseInt(id)] = grouped[parseInt(id)];
-    });
-
-    return sortedGroupedData;
-  }, [rawData]); // Dependency on rawData ensures re-grouping if data changes (though unlikely for this file)
+    return grouped;
+  }, []);
 
   // Calculate scout statistics for the five specific scouts (ranked count and reports)
   const scoutStats: ScoutStat[] = useMemo(() => {
@@ -181,9 +209,9 @@ const AdminDashboard: React.FC = () => {
 
     // Process rankings to count how many players each scout ranked
     if (Array.isArray(rawData.scoutRankings)) {
-      rawData.scoutRankings.forEach((playerRankingEntry: any) => {
+      rawData.scoutRankings.forEach((playerRankingEntry: ScoutRanking) => {
         specificScouts.forEach(scoutKey => {
-          const hasScoutKey = playerRankingEntry.hasOwnProperty(scoutKey);
+          const hasScoutKey = Object.prototype.hasOwnProperty.call(playerRankingEntry, scoutKey);
           const isRankNotNull = playerRankingEntry[scoutKey] != null;
           if (hasScoutKey && isRankNotNull) {
             stats[scoutKey].rankedCount++;
@@ -194,7 +222,7 @@ const AdminDashboard: React.FC = () => {
 
     // Process reports for the specific scouts
     if (Array.isArray(rawData.scoutingReports)) {
-      rawData.scoutingReports.forEach((report: any) => {
+      rawData.scoutingReports.forEach((report: ScoutReport) => {
         const scoutNameFromReport = report.scout;
         // Find the corresponding key in specificScouts array
         const scoutKey = specificScouts.find(key => 
@@ -212,76 +240,78 @@ const AdminDashboard: React.FC = () => {
       scoutName: scoutKey.replace(' Rank', ''),
       scoutData: stats[scoutKey]
     }));
-  }, [rawData.scoutRankings, rawData.scoutingReports]);
+  }, []); // Remove rawData dependencies
 
   // Calculate average ranking for a player from grouped data
-  const calculateAverageRankRawData = (playerGroupedData: { [category: string]: any[] | any }) => {
+  const calculateAverageRankRawData = (playerGroupedData: GroupedPlayerData) => {
     const rankingsArray = playerGroupedData.scoutRankings; // This should be an array with one ranking object
     if (!Array.isArray(rankingsArray) || rankingsArray.length === 0) return Infinity;
-
+  
     const rankings = rankingsArray[0]; // Get the single ranking object
     if (!rankings) return Infinity;
-
+  
     const rankValues: number[] = Object.entries(rankings)
       .filter(([key]) => key !== 'playerId' && rankings[key] != null) // Filter out null/undefined ranks as well
       .map(([, value]) => Number(value))
       .filter(value => !isNaN(value));
-
-    const count = rankValues.length; // This is the number of scouts who provided a valid rank
-
+  
+    const count = rankValues.length;
+  
     return count > 0
-      ? rankValues.reduce((sum, rank) => sum + rank, 0) / count // Sum of valid rankings / Number of valid ranked scouts
+      ? rankValues.reduce((sum, rank) => sum + rank, 0) / count
       : Infinity;
   };
+  
 
-  // Apply sorting and filtering to raw data
+  // Update the filter functions
   const processedRawData = useMemo(() => {
-    let filteredEntries = Object.entries(groupedRawData);
+    let filteredEntries = Object.entries(groupedRawData as Record<number, GroupedPlayerData>);
 
-    // Apply filters
     if (rawDataFilter.search) {
-      filteredEntries = filteredEntries.filter(([_, data]) => {
-        const bio = data.bio?.[0];
+      filteredEntries = filteredEntries.filter(([, data]) => {
+        const bio = (data.bio as PlayerBio[])?.[0];
         return bio?.name?.toLowerCase().includes(rawDataFilter.search.toLowerCase());
       });
     }
 
     if (rawDataFilter.leagueType !== 'All') {
-      filteredEntries = filteredEntries.filter(([_, data]) => {
-        const bio = data.bio?.[0];
+      filteredEntries = filteredEntries.filter(([, data]) => {
+        const bio = (data.bio as PlayerBio[])?.[0];
         return bio?.leagueType === rawDataFilter.leagueType;
       });
     }
 
     if (rawDataFilter.nationality !== 'All') {
-      filteredEntries = filteredEntries.filter(([_, data]) => {
-        const bio = data.bio?.[0];
+      filteredEntries = filteredEntries.filter(([, data]) => {
+        const bio = (data.bio as PlayerBio[])?.[0];
         return bio?.nationality === rawDataFilter.nationality;
       });
     }
 
     // Sort the filtered data
     filteredEntries.sort(([idA, dataA], [idB, dataB]) => {
-      const bioA = dataA.bio?.[0];
-      const bioB = dataB.bio?.[0];
+      const bioA = (dataA.bio as PlayerBio[])?.[0];
+      const bioB = (dataB.bio as PlayerBio[])?.[0];
 
       switch (rawDataSortBy) {
-        case 'name':
-          return (bioA?.name || '').localeCompare(bioB?.name || '');
-        case 'avgRank':
-          // Use the specific raw data average rank calculation
+        case 'name': {
+          const nameA = (bioA?.name || '').toLowerCase();
+          const nameB = (bioB?.name || '').toLowerCase();
+          return nameA.localeCompare(nameB);
+        }
+        case 'avgRank': {
           const avgRankA = calculateAverageRankRawData(dataA);
           const avgRankB = calculateAverageRankRawData(dataB);
-          // console.log(`Comparing Player ${idA} (Avg Rank: ${avgRankA}) with Player ${idB} (Avg Rank: ${avgRankB})`); // Remove console.log after debugging
           return avgRankA - avgRankB;
-        case 'id':
+        }
+        case 'id': {
           return parseInt(idA) - parseInt(idB);
+        }
         default:
           return 0;
       }
     });
 
-    // Return the sorted array directly
     return filteredEntries;
   }, [groupedRawData, rawDataSortBy, rawDataFilter]);
 
@@ -318,9 +348,11 @@ const AdminDashboard: React.FC = () => {
               <AccordionDetails>
                 <Box sx={{ textAlign: 'center', '& p': { mb: 0.5 } }}>
                       {Object.entries(stats.playersByLeague)
-                        .sort(([, a], [, b]) => b - a)
+                        .sort(([, a], [, b]) => (b as number) - (a as number))
                         .map(([league, count]) => (
-                      <Typography key={league}><Typography component="span" fontWeight="medium">{league}:</Typography> {count} players</Typography>
+                      <Typography key={league}>
+                        <Typography component="span" fontWeight="medium">{league}:</Typography> {count} players
+                      </Typography>
                     ))
                 }
                 </Box>
@@ -382,7 +414,7 @@ const AdminDashboard: React.FC = () => {
                     <Box sx={{ mt: 1, pl: 2, borderLeft: '2px solid #eee' }}>
                         <Typography variant="subtitle2" fontWeight="bold" gutterBottom>Scouting Reports ({scoutData.reports.length})</Typography>
                         <Box>
-                            {scoutData.reports.map((report: any, index: number) => (
+                            {scoutData.reports.map((report: ScoutReport, index: number) => (
                                 <Box key={report.reportId || index} sx={{ mb: 2, pb: 2, borderBottom: '1px solid #eee' }}>
                                     <Typography variant="body2" fontWeight="medium">Player ID: {report.playerId}</Typography>
                                     <Typography variant="body2" color="text.secondary">Report:</Typography>
@@ -502,9 +534,9 @@ const AdminDashboard: React.FC = () => {
                                         </TableRow>
                                       </TableHead>
                                       <TableBody>
-                                        {categoryData.map((row: any, rowIndex: number) => (
+                                        {categoryData.map((row: Record<string, unknown>, rowIndex: number) => (
                                           <TableRow key={rowIndex}>
-                                            {Object.values(row).map((cellValue: any, cellIndex: number) => (
+                                            {Object.values(row).map((cellValue: unknown, cellIndex: number) => (
                                               <TableCell key={cellIndex}>
                                                 {typeof cellValue === 'object' && cellValue !== null
                                                   ? JSON.stringify(cellValue, null, 2)

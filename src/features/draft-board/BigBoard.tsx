@@ -1,11 +1,28 @@
 import React, { useState, useMemo } from 'react';
-import { Box, Typography, Paper, Link as MuiLink, Divider, Chip, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+import { Box, Typography, Paper, Link as MuiLink, Chip, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { playerBios, scoutRankings } from '../../data'; // Import real data
+import { scoutRankings } from '../../data';
+import type { PlayerBio as BasePlayerBio } from '../../types/player.types';
+import { playerBios as rawPlayerBios } from '../../data';
 
-// Helper to get a player's scout ranking object by playerId
-const getPlayerScoutRanking = (playerId: number) =>
-  scoutRankings.find((r: any) => r.playerId === playerId);
+// Extend the base PlayerBio with additional properties
+interface PlayerBio extends BasePlayerBio {
+  class?: string;
+  age?: number;
+}
+
+// Type the playerBios
+const playerBios: PlayerBio[] = rawPlayerBios as PlayerBio[];
+
+// Define proper types for scout rankings
+interface ScoutRanking {
+  playerId: number;
+  [scoutName: string]: number | string | null;
+}
+
+// Update the getPlayerScoutRanking function with proper typing
+const getPlayerScoutRanking = (playerId: number): ScoutRanking | undefined =>
+  scoutRankings.find((r) => r.playerId === playerId);
 
 const getHeightString = (inches: number) => {
   if (!inches) return 'N/A';
@@ -14,48 +31,49 @@ const getHeightString = (inches: number) => {
   return `${feet}'${inch}"`;
 };
 
-// Calculate average ranking and count of rankings for a player
-const calculateAverageRank = (playerRankingData: any): { avg: number, count: number } => {
+// Update calculateAverageRank with proper typing
+const calculateAverageRank = (playerRankingData: ScoutRanking | undefined): { avg: number, count: number } => {
   if (!playerRankingData) return { avg: Infinity, count: 0 };
 
-  // Extract only the ranking values, excluding playerId
   const rankValues: number[] = Object.entries(playerRankingData)
-    .filter(([key]) => key !== 'playerId' && playerRankingData[key] != null) // Filter out null/undefined ranks as well
+    .filter(([key]) => key !== 'playerId' && playerRankingData[key] != null)
     .map(([, value]) => Number(value))
     .filter(value => !isNaN(value));
 
-  const count = rankValues.length; // This is the number of scouts who provided a valid rank
+  const count = rankValues.length;
   const avg = count > 0
-    ? rankValues.reduce((sum, rank) => sum + rank, 0) / count // Sum of valid rankings / Number of valid ranked scouts
+    ? rankValues.reduce((sum, rank) => sum + rank, 0) / count
     : Infinity;
 
   return { avg, count };
 };
 
+// Add interface for player summary
+interface PlayerSummary {
+  summary?: string;
+  class?: string;
+  age?: number;
+  name: string;
+  playerId: number;
+  height: number;
+  weight: number;
+  photoUrl?: string;
+}
+
 const BigBoard: React.FC = () => {
   const navigate = useNavigate();
   const [sortBy, setSortBy] = useState<'avgRank' | string>('avgRank');
 
-  // Get unique scout names from the rankings data
-  const scoutNames = useMemo(() => {
-    if (!scoutRankings || scoutRankings.length === 0) return [];
-    // Assuming the first ranking object has all the keys we need
-    const firstRanking = scoutRankings[0];
-    return Object.keys(firstRanking).filter(key => key !== 'playerId');
-  }, [scoutRankings]);
-
-  // Sort players based on selected criteria
+  // Update the sortedPlayers useMemo to remove unnecessary dependencies
   const sortedPlayers = useMemo(() => {
-    let players = [...playerBios];
+    const players = [...playerBios];
 
     // Filter players based on sorting criteria before sorting
     let filteredPlayers = players;
     if (sortBy !== 'avgRank') {
-      // When sorting by a specific scout, only include players ranked by that scout
       filteredPlayers = players.filter(player => {
         const ranking = getPlayerScoutRanking(player.playerId);
-        // Use type assertion here assuming ranking is ScoutRanking | undefined
-        return ranking && (ranking as any)[sortBy] != null; // Check if the scout's rank exists and is not null/undefined
+        return ranking && ranking[sortBy] != null;
       });
     }
 
@@ -84,8 +102,8 @@ const BigBoard: React.FC = () => {
       } else {
         // Sort by a specific scout rank (we already filtered out players without this rank)
         // Use type assertion here assuming rankingA and rankingB are ScoutRanking
-        const rankA = Number((rankingA as any)[sortBy]);
-        const rankB = Number((rankingB as any)[sortBy]);
+        const rankA = Number((rankingA as ScoutRanking)[sortBy]);
+        const rankB = Number((rankingB as ScoutRanking)[sortBy]);
 
         // Since we filtered, rankA and rankB should be numbers here if the data is clean,
         // but keeping isNaN checks for robustness.
@@ -101,8 +119,14 @@ const BigBoard: React.FC = () => {
     const displayedPlayers = filteredPlayers.slice(0, 60); // Display up to 60 players
 
     return displayedPlayers; // Return the sorted and sliced array
+  }, [sortBy]); // Remove unnecessary dependencies
 
-  }, [playerBios, scoutRankings, sortBy, scoutNames]); // Add scoutNames as dependency
+  // Update the second useMemo to remove unnecessary dependencies
+  const scoutNames = useMemo(() => {
+    if (!scoutRankings || scoutRankings.length === 0) return [];
+    const firstRanking = scoutRankings[0];
+    return Object.keys(firstRanking).filter(key => key !== 'playerId');
+  }, []); // Remove scoutRankings dependency
 
   return (
     <Box sx={{ px: 2, py: 4 }}>
@@ -135,13 +159,21 @@ const BigBoard: React.FC = () => {
 
           // Basic logic for high/low ranking indication (can be refined)
           // This logic might need adjustment based on the overall sorted list position, not just idx
-          const currentRankInList = idx + 1;
           const playerAvgRankData = calculateAverageRank(ranking);
           const playerAvgRank = playerAvgRankData.avg; // Use the calculated average
 
           // Example thresholds based on player's position in the sorted list
-          const isHighRanking = (scoutRank: number) => playerAvgRank !== Infinity && scoutRank < playerAvgRank * 0.8; // Example: 20% better than avg
-          const isLowRanking = (scoutRank: number) => playerAvgRank !== Infinity && scoutRank > playerAvgRank * 1.2; // Example: 20% worse than avg
+          const isHighRanking = (scoutRank: string | number | null): boolean => {
+            if (scoutRank === null) return false;
+            const rank = Number(scoutRank);
+            return !isNaN(rank) && rank < playerAvgRank * 0.8;
+          };
+
+          const isLowRanking = (scoutRank: string | number | null): boolean => {
+            if (scoutRank === null) return false;
+            const rank = Number(scoutRank);
+            return !isNaN(rank) && rank > playerAvgRank * 1.2;
+          };
 
           return (
             <Paper key={player.playerId} elevation={3} sx={{ borderRadius: 2, overflow: 'hidden' }}>
@@ -182,20 +214,18 @@ const BigBoard: React.FC = () => {
                       <Typography variant="body1" sx={{ fontWeight: 600 }}>{player.weight}</Typography>
                       <Typography variant="body2" color="text.secondary">Weight</Typography>
                     </Box>
-                    {/* Player class and age might not be in playerBios directly - need to check data */}
-                     {/* For now, using placeholders or omitting if not available */}
-                     {(player as any).class && ( // Use type assertion
-                       <Box>
-                         <Typography variant="body1" sx={{ fontWeight: 600 }}>{(player as any).class}</Typography>
-                         <Typography variant="body2" color="text.secondary">Class</Typography>
-                       </Box>
-                     )}
-                     {(player as any).age && ( // Use type assertion
-                       <Box>
-                         <Typography variant="body1" sx={{ fontWeight: 600 }}>{(player as any).age}</Typography>
-                         <Typography variant="body2" color="text.secondary">Age</Typography>
-                       </Box>
-                     )}
+                    {player.class && (
+                      <Box>
+                        <Typography variant="body1" sx={{ fontWeight: 600 }}>{player.class}</Typography>
+                        <Typography variant="body2" color="text.secondary">Class</Typography>
+                      </Box>
+                    )}
+                    {player.age && (
+                      <Box>
+                        <Typography variant="body1" sx={{ fontWeight: 600 }}>{player.age}</Typography>
+                        <Typography variant="body2" color="text.secondary">Age</Typography>
+                      </Box>
+                    )}
                   </Box>
                 </Box>
 
@@ -203,7 +233,7 @@ const BigBoard: React.FC = () => {
                 <Box sx={{ flexGrow: 1 }}>
                   <Typography variant="h6" gutterBottom>Summary</Typography>
                   <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
-                    {(player as any).summary || 'No summary available.'} {/* Use type assertion */}
+                    {(player as PlayerSummary).summary || 'No summary available.'}
                   </Typography>
 
                   {/* Scout Rankings */}
@@ -211,7 +241,7 @@ const BigBoard: React.FC = () => {
                   <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                     {scoutNames.map(scoutName => {
                       // Use type assertion assuming ranking is ScoutRanking
-                      const scoutRank = ranking ? (ranking as any)[scoutName] : undefined;
+                      const scoutRank = ranking ? (ranking as ScoutRanking)[scoutName] : undefined;
                       if (scoutRank == null) return null;
 
                       const rankColor = isHighRanking(scoutRank) ? 'success' : isLowRanking(scoutRank) ? 'error' : 'default';
