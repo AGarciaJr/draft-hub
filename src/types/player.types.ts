@@ -119,11 +119,15 @@ export interface SeasonLog {
 }
 
 export interface ScoutingReport {
-  scout: string;
+  scout?: string;         
+  user?: string;          
   reportId: string;
   playerId: number;
   report: string;
+  date?: string;
 }
+
+
 
 export interface PlayerStats {
   totalPlayers: number;

@@ -201,7 +201,7 @@ const BigBoard: React.FC = () => {
                 <Box sx={{ flexShrink: 0, width: { xs: '100%', md: 250 }, textAlign: 'center' }}>
                   <Box
                     component="img"
-                    src={player.photoUrl || 'https://cdn.nba.com/headshots/nba/latest/1040x760/1631244.png'} // Use real photo or the placeholder
+                    src={player.photoUrl || 'https://cdn.nba.com/headshots/nba/latest/1040x760/1631244.png'} 
                     alt={player.name}
                     sx={{ width: '100%', height: 'auto', objectFit: 'contain', borderRadius: 1 }}
                   />
