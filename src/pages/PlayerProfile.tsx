@@ -3,17 +3,26 @@ import { useParams } from 'react-router-dom';
 import { playerDataService } from '../services/playerDataService';
 import { Box, Typography, Paper, Container, Divider } from '@mui/material';
 import ScoutingReportForm from '../components/ScoutingReportForm';
-
-interface ScoutingReport {
-  user: string;
-  report: string;
-  date: string;
-}
+import ScoutingReportList from '../components/ScoutingReportList';
+import type { ScoutingReport } from '../types/player.types';
 
 const PlayerProfile: React.FC = () => {
   const { playerId } = useParams();
-  const player = playerDataService.getPlayerById(Number(playerId));
-  const [scoutingReports, setScoutingReports] = useState<ScoutingReport[]>([]);
+  console.log(playerId);
+  const numericPlayerId = Number(playerId);
+  console.log(numericPlayerId);
+
+  const player = playerDataService.getPlayerById(numericPlayerId);
+
+  // Get existing reports from the JSON
+  const existingReports = playerDataService.getScoutingReportsByPlayerId(numericPlayerId);
+  console.log(existingReports);
+
+  // Track user-added reports
+  const [userReports, setUserReports] = useState<ScoutingReport[]>([]);
+
+  // Combine both for display
+  const combinedReports = [...existingReports, ...userReports];
 
   if (!player) {
     return (
@@ -31,14 +40,16 @@ const PlayerProfile: React.FC = () => {
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
       <Paper elevation={3} sx={{ p: { xs: 2, md: 4 } }}>
-        <Box sx={{ 
-          display: 'grid',
-          gridTemplateColumns: {
-            xs: '1fr',
-            md: '1fr 2fr'
-          },
-          gap: 4
-        }}>
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: {
+              xs: '1fr',
+              md: '1fr 2fr',
+            },
+            gap: 4,
+          }}
+        >
           <Box>
             {player.photoUrl ? (
               <Box
@@ -49,7 +60,7 @@ const PlayerProfile: React.FC = () => {
                   width: '100%',
                   height: 'auto',
                   borderRadius: 2,
-                  boxShadow: 3
+                  boxShadow: 3,
                 }}
               />
             ) : (
@@ -61,7 +72,7 @@ const PlayerProfile: React.FC = () => {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  borderRadius: 2
+                  borderRadius: 2,
                 }}
               >
                 <Typography variant="h6" color="text.secondary">
@@ -70,20 +81,22 @@ const PlayerProfile: React.FC = () => {
               </Box>
             )}
           </Box>
-          
+
           <Box>
             <Typography variant="h3" gutterBottom>
               {player.name}
             </Typography>
-            
-            <Box sx={{ 
-              display: 'grid',
-              gridTemplateColumns: {
-                xs: '1fr',
-                sm: 'repeat(2, 1fr)'
-              },
-              gap: 2
-            }}>
+
+            <Box
+              sx={{
+                display: 'grid',
+                gridTemplateColumns: {
+                  xs: '1fr',
+                  sm: 'repeat(2, 1fr)',
+                },
+                gap: 2,
+              }}
+            >
               <Box>
                 <Typography variant="subtitle1" color="text.secondary">
                   Current Team
@@ -92,7 +105,7 @@ const PlayerProfile: React.FC = () => {
                   {player.currentTeam}
                 </Typography>
               </Box>
-              
+
               <Box>
                 <Typography variant="subtitle1" color="text.secondary">
                   League
@@ -159,11 +172,23 @@ const PlayerProfile: React.FC = () => {
           </Box>
         </Box>
       </Paper>
-      <ScoutingReportForm
-        playerId={Number(player.playerId)}
-        reports={scoutingReports}
-        setReports={setScoutingReports}
-      />
+
+      {/* Scouting Report Section */}
+      <Box mt={6}>
+        <Typography variant="h5" gutterBottom>
+          Scouting Reports
+        </Typography>
+
+        <ScoutingReportForm
+          playerId={numericPlayerId}
+          reports={userReports}
+          setReports={setUserReports}
+        />
+
+        <Box mt={4}>
+          <ScoutingReportList reports={combinedReports} />
+        </Box>
+      </Box>
     </Container>
   );
 };
