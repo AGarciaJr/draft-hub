@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Box, Typography, Paper, Chip, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+import { Box, Typography, Paper, Chip, Select, MenuItem, FormControl, InputLabel, Link as MuiLink } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { scoutRankings, playerSummaries } from '../../data';
 import type { PlayerBio as BasePlayerBio } from '../../types/player.types';
@@ -69,6 +69,14 @@ const hasScoutingReport = (playerId: number, scoutName: string): boolean => {
 const BigBoard: React.FC = () => {
   const navigate = useNavigate();
   const [sortBy, setSortBy] = useState<'avgRank' | string>('avgRank');
+  const [selectedScout, setSelectedScout] = useState<string>('');
+
+  // Get unique scout names from the scouting reports
+  const availableScouts = useMemo(() => {
+    const reports = playerDataService.getAllScoutingReports();
+    const scouts = new Set(reports.map(report => report.scout));
+    return Array.from(scouts);
+  }, []);
 
   // Update the sortedPlayers useMemo to remove unnecessary dependencies
   const sortedPlayers = useMemo(() => {
@@ -137,25 +145,43 @@ const BigBoard: React.FC = () => {
   return (
     <Box sx={{ px: 2, py: 4 }}>
       <Typography variant="h4" component="h1" gutterBottom>
-        NextGen Draft Board {/* Updated Title */}
+        NextGen Draft Board
       </Typography>
 
-      {/* Sorting Control */}
-      <Box sx={{ mb: 3, display: 'flex', alignItems: 'center' }}>
-        <Typography variant="body1" sx={{ mr: 1 }}>Sort by:</Typography>
+      {/* Sorting and Filtering Controls */}
+      <Box sx={{ mb: 3, display: 'flex', alignItems: 'center', gap: 2 }}>
         <FormControl size="small" sx={{ width: 200 }}>
-          <InputLabel>Sort By</InputLabel>
+          <InputLabel id="sort-by-label">Sort By</InputLabel>
           <Select
+            labelId="sort-by-label"
             value={sortBy}
             label="Sort By"
             onChange={(e) => setSortBy(e.target.value as 'avgRank' | string)}
           >
             <MenuItem value="avgRank">Average Rank</MenuItem>
             {scoutNames.map(scoutName => (
-              <MenuItem key={scoutName} value={scoutName}>{scoutName}</MenuItem>
+            <MenuItem key={scoutName} value={scoutName}>{scoutName}</MenuItem>
             ))}
           </Select>
         </FormControl>
+
+        <FormControl size="small" sx={{ width: 200 }}>
+          <InputLabel id="reports-by-label">Reports By</InputLabel>
+          <Select
+            labelId="reports-by-label"
+            value={selectedScout}
+            label="Reports By"
+            onChange={(e) => setSelectedScout(e.target.value)}
+          >
+            <MenuItem value="">
+              <em>All Scouts</em>
+            </MenuItem>
+            {availableScouts.map(scout => (
+              <MenuItem key={scout} value={scout}>{scout}</MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
       </Box>
 
       <Box sx={{ display: 'grid', gap: 4 }}>
@@ -317,7 +343,32 @@ const BigBoard: React.FC = () => {
                     })}
                   </Box>
 
-                  {/* Placeholder for Comparisons/Attributes if needed later */}
+                  {/* Scout Report Section - Only show if a scout is selected and has a report */}
+                  {selectedScout && (
+                    <Box sx={{ mt: 3 }}>
+                      {playerDataService.getPlayerScoutingReports(player.playerId)
+                        .filter(report => report.scout === selectedScout)
+                        .map(report => (
+                          <Box key={report.reportId}>
+                            <Typography variant="h6" gutterBottom>
+                              Scouting Report by {report.scout}
+                            </Typography>
+                            <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
+                              {report.report}
+                            </Typography>
+                          </Box>
+                        ))}
+                      <Box sx={{ mt: 2, textAlign: 'right' }}>
+                        <MuiLink
+                          component="button"
+                          variant="button"
+                          onClick={() => navigate(`/profiles/${player.playerId}`)}
+                        >
+                          See full player report
+                        </MuiLink>
+                      </Box>
+                    </Box>
+                  )}
                 </Box>
               </Box>
             </Paper>
