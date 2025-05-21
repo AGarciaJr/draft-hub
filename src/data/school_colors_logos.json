@@ -1,0 +1,124 @@
+{
+  "schools": {
+    "Duke": {
+      "name": "Duke University",
+      "colors": {
+        "primary": "#012169",
+        "secondary": "#FFFFFF"
+      },
+      "logo": "/assets/logos/duke.png"
+    },
+    "Rutgers": {
+      "name": "Rutgers University",
+      "colors": {
+        "primary": "#CC0033",
+        "secondary": "#000000"
+      },
+      "logo": "/assets/logos/rutgers.png"
+    },
+    "Texas": {
+      "name": "University of Texas",
+      "colors": {
+        "primary": "#BF5700",
+        "secondary": "#FFFFFF"
+      },
+      "logo": "/assets/logos/texas.png"
+    },
+    "Baylor": {
+      "name": "Baylor University",
+      "colors": {
+        "primary": "#1B4D8F",
+        "secondary": "#FFC72C"
+      },
+      "logo": "/assets/logos/baylor.png"
+    },
+    "Gonzaga": {
+      "name": "Gonzaga University",
+      "colors": {
+        "primary": "#041E42",
+        "secondary": "#FFFFFF"
+      },
+      "logo": "/assets/logos/gonzaga.png"
+    },
+    "Iowa": {
+      "name": "University of Iowa",
+      "colors": {
+        "primary": "#000000",
+        "secondary": "#FFCD00"
+      },
+      "logo": "/assets/logos/iowa.png"
+    },
+    "Auburn": {
+      "name": "Auburn University",
+      "colors": {
+        "primary": "#0C2340",
+        "secondary": "#DD550C"
+      },
+      "logo": "/assets/logos/auburn.png"
+    },
+    "Villanova": {
+      "name": "Villanova University",
+      "colors": {
+        "primary": "#00205B",
+        "secondary": "#FFFFFF"
+      },
+      "logo": "/assets/logos/villanova.png"
+    },
+    "Florida": {
+      "name": "University of Florida",
+      "colors": {
+        "primary": "#0021A5",
+        "secondary": "#FA4616"
+      },
+      "logo": "/assets/logos/florida.png"
+    },
+    "Nebraska": {
+      "name": "University of Nebraska",
+      "colors": {
+        "primary": "#E30A17",
+        "secondary": "#FFFFFF"
+      },
+      "logo": "/assets/logos/nebraska.png"
+    },
+    "Joventut": {
+      "name": "Joventut Badalona",
+      "colors": {
+        "primary": "#0066CC",
+        "secondary": "#FFFFFF"
+      },
+      "logo": "/assets/logos/joventut.png"
+    },
+    "St. John's": {
+      "name": "St. John's University",
+      "colors": {
+        "primary": "#C41E3A",
+        "secondary": "#FFFFFF"
+      },
+      "logo": "/assets/logos/stjohns.png"
+    },
+    "Perth Wildcats": {
+      "name": "Perth Wildcats",
+      "colors": {
+        "primary": "#000000",
+        "secondary": "#FFD700"
+      },
+      "logo": "/assets/logos/perth.png"
+    },
+    "Alabama": {
+      "name": "University of Alabama",
+      "colors": {
+        "primary": "#9E1B32",
+        "secondary": "#FFFFFF"
+      },
+      "logo": "/assets/logos/alabama.png"
+    },
+    "Mexico City Capitanes": {
+      "name": "Mexico City Capitanes",
+      "colors": {
+        "primary": "#1A237E",
+        "secondary": "#FFFFFF"
+      },
+      "logo": "/assets/logos/capitanes.png"
+    }
+  }
+} 
