@@ -184,227 +184,245 @@ const BigBoard: React.FC = () => {
       </Box>
 
       <Box sx={{ display: 'grid', gap: 4 }}>
-        {sortedPlayers.map((player, idx) => {
-          const ranking = getPlayerScoutRanking(player.playerId);
-          const scoutNames = ranking ? Object.keys(ranking).filter(key => key !== 'playerId') : []; // Recalculate scoutNames here if needed per player
+      {sortedPlayers.map((player, idx) => {
+  const ranking = getPlayerScoutRanking(player.playerId);
+  const scoutNames = ranking ? Object.keys(ranking).filter(key => key !== 'playerId') : [];
 
-          // Basic logic for high/low ranking indication (can be refined)
-          // This logic might need adjustment based on the overall sorted list position, not just idx
-          const playerAvgRankData = calculateAverageRank(ranking);
-          const playerAvgRank = playerAvgRankData.avg; // Use the calculated average
+  const playerAvgRankData = calculateAverageRank(ranking);
+  const playerAvgRank = playerAvgRankData.avg;
 
-          // Example thresholds based on player's position in the sorted list
-          const isHighRanking = (scoutRank: string | number | null): boolean => {
-            if (scoutRank === null) return false;
-            const rank = Number(scoutRank);
-            return !isNaN(rank) && rank < playerAvgRank * 0.8;
-          };
+  const isHighRanking = (scoutRank: string | number | null): boolean => {
+    if (scoutRank === null) return false;
+    const rank = Number(scoutRank);
+    return !isNaN(rank) && rank < playerAvgRank * 0.8;
+  };
 
-          const isLowRanking = (scoutRank: string | number | null): boolean => {
-            if (scoutRank === null) return false;
-            const rank = Number(scoutRank);
-            return !isNaN(rank) && rank > playerAvgRank * 1.2;
-          };
+  const isLowRanking = (scoutRank: string | number | null): boolean => {
+    if (scoutRank === null) return false;
+    const rank = Number(scoutRank);
+    return !isNaN(rank) && rank > playerAvgRank * 1.2;
+  };
 
-          return (
-            <Paper key={player.playerId} elevation={3} sx={{ borderRadius: 2, overflow: 'hidden' }}>
-              {/* Player Header */}
-              <Box
-                sx={{
-                  bgcolor: idx % 2 === 0 ? 'primary.main' : '#012B5E', // Alternating theme colors
-                  color: 'primary.contrastText',
-                  p: 2,
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 2,
-                  flexWrap: 'wrap',
-                }}
-              >
-                <Typography variant="h6" sx={{ fontWeight: 700 }}>Rank {idx + 1}</Typography>
-                {/* Placeholder for team logo/icon */}
-                <Typography variant="h6" sx={{ fontWeight: 700 }}>{player.name}</Typography>
-                {/* <Typography variant="body1">{player.position} • {player.currentTeam}</Typography> */}
+  return (
+    <Paper key={player.playerId} elevation={3} sx={{ borderRadius: 3, overflow: 'hidden', mb: 4, color: '#000' }}>
+      {/* Header Bar */}
+      <Box
+        sx={{
+          bgcolor: '#e0e7ff',
+          px: 3,
+          py: 2,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          borderBottom: '1px solid #ccc',
+        }}
+      >
+        <Chip
+          label={`Rank ${idx + 1}`}
+          color="primary"
+          sx={{ fontWeight: 700, fontSize: '1rem' }}
+        />
+        <Typography variant="h5" sx={{ fontWeight: 700 }}>
+          {player.name}
+          <Typography
+            component="span"
+            sx={{ fontSize: '1.1rem', fontWeight: 400, color: '#333', ml: 1 }}
+          >
+            {player.position ? `• ${player.position}` : ''} {player.currentTeam ? `• ${player.currentTeam}` : ''}
+          </Typography>
+        </Typography>
+      </Box>
+
+      {/* Main Content */}
+      <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, bgcolor: 'white', p: 4, gap: 4 }}>
+        {/* Left: Image + Info */}
+        <Box sx={{ width: { xs: '100%', md: 380 }, mb: 2, textAlign: 'center' }}>
+          <Box
+            sx={{
+              width: '100%',
+              height: 260,
+              background: '#f3f3f3',
+              borderRadius: 2,
+              overflow: 'hidden',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              position: 'relative',
+              transition: 'box-shadow 0.2s',
+              '&:hover': { boxShadow: '0 0 0 4px #075A9933' },
+            }}
+            onClick={() => navigate(`/profiles/${player.playerId}`)}
+            title={`View ${player.name}'s profile`}
+          >
+            <Box
+              component="img"
+              src={player.photoUrl || 'https://cdn.nba.com/headshots/nba/latest/1040x760/1631244.png'}
+              alt={player.name}
+              sx={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                borderRadius: 2,
+                display: 'block',
+              }}
+            />
+            {/* Animated overlay on hover */}
+            <Box
+              className="profile-overlay"
+              sx={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                bgcolor: 'rgba(0,0,0,0.6)',
+                color: 'white',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: 2,
+                opacity: 0,
+                transition: 'opacity 0.2s',
+                fontSize: 24,
+                fontWeight: 600,
+                pointerEvents: 'none', // So the click still goes to the parent
+                zIndex: 2,
+                userSelect: 'none',
+                '.MuiBox-root:hover > &': {
+                  opacity: 1,
+                },
+              }}
+            >
+              View Profile
+            </Box>
+          </Box>
+          <Box sx={{ display: 'flex', justifyContent: 'center', gap: 6, width: '100%', mt: 2 }}>
+            <Box>
+              <Typography variant="h6" sx={{ fontWeight: 700 }}>{getHeightString(player.height)}</Typography>
+              <Typography variant="body2" color="text.secondary">Height</Typography>
+            </Box>
+            <Box>
+              <Typography variant="h6" sx={{ fontWeight: 700 }}>{player.weight}</Typography>
+              <Typography variant="body2" color="text.secondary">Weight</Typography>
+            </Box>
+            {player.class && (
+              <Box>
+                <Typography variant="h6" sx={{ fontWeight: 700 }}>{player.class}</Typography>
+                <Typography variant="body2" color="text.secondary">Class</Typography>
               </Box>
+            )}
+            {player.age && (
+              <Box>
+                <Typography variant="h6" sx={{ fontWeight: 700 }}>{player.age}</Typography>
+                <Typography variant="body2" color="text.secondary">Age</Typography>
+              </Box>
+            )}
+          </Box>
+        </Box>
 
-              {/* Player Main Content */}
-              <Box sx={{ display: 'flex', p: 2, gap: 3, flexDirection: { xs: 'column', md: 'row' } }}>
-                {/* Player Image and Basic Info */}
-                <Box
-                  sx={{
-                    flexShrink: 0,
-                    width: { xs: '100%', md: 250 },
-                    textAlign: 'center',
-                    position: 'relative',
-                    cursor: 'pointer',
-                    '&:hover .profile-overlay': {
-                      opacity: 1,
-                    },
-                  }}
-                  onClick={() => navigate(`/profiles/${player.playerId}`)}
-                >
-                  <Box
-                    component="img"
-                    src={player.photoUrl || 'https://cdn.nba.com/headshots/nba/latest/1040x760/1631244.png'}
-                    alt={player.name}
-                    sx={{
-                      width: '100%',
-                      height: 'auto',
-                      objectFit: 'contain',
-                      borderRadius: 1,
-                      display: 'block',
-                    }}
-                  />
-                  <Box
-                    className="profile-overlay"
-                    sx={{
-                      position: 'absolute',
-                      top: 0,
-                      left: 0,
-                      width: '100%',
-                      height: '100%',
-                      bgcolor: 'rgba(0,0,0,0.6)',
-                      color: 'white',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      borderRadius: 1,
-                      opacity: 0,
-                      transition: 'opacity 0.2s',
-                      fontSize: 24,
-                      fontWeight: 600,
-                      pointerEvents: 'none', // So the click still goes to the parent
-                      zIndex: 2,
-                      userSelect: 'none',
-                    }}
-                  >
-                    View Profile
-                  </Box>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-around', mt: 1 }}>
-                    <Box>
-                      <Typography variant="body1" sx={{ fontWeight: 600 }}>{getHeightString(player.height)}</Typography>
-                      <Typography variant="body2" color="text.secondary">Height</Typography>
-                    </Box>
-                    <Box>
-                      <Typography variant="body1" sx={{ fontWeight: 600 }}>{player.weight}</Typography>
-                      <Typography variant="body2" color="text.secondary">Weight</Typography>
-                    </Box>
-                    {player.class && (
-                      <Box>
-                        <Typography variant="body1" sx={{ fontWeight: 600 }}>{player.class}</Typography>
-                        <Typography variant="body2" color="text.secondary">Class</Typography>
-                      </Box>
-                    )}
-                    {player.age && (
-                      <Box>
-                        <Typography variant="body1" sx={{ fontWeight: 600 }}>{player.age}</Typography>
-                        <Typography variant="body2" color="text.secondary">Age</Typography>
-                      </Box>
-                    )}
-                  </Box>
-                </Box>
+        {/* Right: Summary and Rankings */}
+        <Box sx={{ flexGrow: 1 }}>
+          <Typography variant="h5" sx={{ fontWeight: 700, mb: 2 }}>Summary</Typography>
+          <Typography variant="body1" sx={{ mb: 4 }}>
+            {getPlayerSummary(player.playerId) || 'No summary available.'}
+          </Typography>
 
-                {/* Player Details (Summary, Scout Rankings, etc.) */}
-                <Box sx={{ flexGrow: 1 }}>
-                  <Typography variant="h6" gutterBottom>Summary</Typography>
-                  <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
-                    {getPlayerSummary(player.playerId) || 'No summary available.'}
-                  </Typography>
-
-                  {/* Scout Rankings */}
-                  <Typography variant="h6" gutterBottom>Scout Rankings</Typography>
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, justifyContent: 'center' }}>
-                    {scoutNames.map(scoutName => {
-                      const scoutRank = ranking ? (ranking as ScoutRanking)[scoutName] : undefined;
-                      if (scoutRank == null) return null;
-
-                      const rankColor = isHighRanking(scoutRank) ? 'success' : isLowRanking(scoutRank) ? 'error' : 'default';
-                      const showStar = hasScoutingReport(player.playerId, scoutName);
-
-                      return (
-                        <Chip
-                          key={scoutName}
-                          label={
-                            <span>
-                              {scoutName}: {scoutRank}
-                              {showStar && (
-                                <StarIcon
-                                  sx={{ ml: 0.5, color: '#FFD700', verticalAlign: 'middle' }}
-                                  fontSize="small"
-                                  titleAccess="Scouting report available"
-                                />
-                              )}
-                            </span>
-                          }
-                          color={rankColor}
-                          size="small"
+          <Typography variant="h5" sx={{ fontWeight: 700, mb: 2 }}>Scout Rankings</Typography>
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, rowGap: 2 }}>
+            {scoutNames.map(scoutName => {
+              const scoutRank = ranking ? (ranking as ScoutRanking)[scoutName] : undefined;
+              if (scoutRank == null) return null;
+              const rankColor = isHighRanking(scoutRank) ? 'success' : isLowRanking(scoutRank) ? 'error' : 'default';
+              const showStar = hasScoutingReport(player.playerId, scoutName);
+              return (
+                <Chip
+                  key={scoutName}
+                  label={
+                    <span>
+                      {scoutName}: {scoutRank}
+                      {showStar && (
+                        <StarIcon
+                          sx={{ ml: 0.5, color: '#FFD700', verticalAlign: 'middle' }}
+                          fontSize="small"
+                          titleAccess="Scouting report available"
                         />
-                      );
-                    })}
-                  </Box>
+                      )}
+                    </span>
+                  }
+                  color={rankColor}
+                  size="small"
+                  sx={{ fontWeight: 500, fontSize: '1rem', px: 2, py: 0.5 }}
+                />
+              );
+            })}
+          </Box>
+        </Box>
+      </Box>
 
-                  {/* Scout Report Section - Only show if a scout is selected and has a report */}
-                  {selectedScout && (
-                    <Box sx={{ mt: 3 }}>
-                      <Collapse in={expandedPlayerId === player.playerId}>
-                        <Typography variant="h6" gutterBottom>
-                          Scouting Reports by {selectedScout === "allScouts" ? "All Scouts" : selectedScout}
-                        </Typography>
-                        {(() => {
-                          const allReports = playerDataService.getPlayerScoutingReports(player.playerId);
-                          const filteredReports = selectedScout === "allScouts"
-                            ? allReports
-                            : allReports.filter(report => report.scout === selectedScout);
-                          return filteredReports.length === 0 ? (
-                            <Typography variant="body2" color="text.secondary">
-                              No reports available for this player by {selectedScout === "allScouts" ? "All Scouts" : selectedScout}.
-                            </Typography>
-                          ) : (
-                            filteredReports.map(report => (
-                              <Box key={report.reportId} sx={{ mb: 2 }}>
-                                <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
-                                  {report.scout}
-                                </Typography>
-                                <Typography variant="body1" color="text.secondary">
-                                  {report.report}
-                                </Typography>
-                              </Box>
-                            ))
-                          );
-                        })()}
-                      </Collapse>
-                      <Button
-                        onClick={() => setExpandedPlayerId(expandedPlayerId === player.playerId ? null : player.playerId)}
-                        sx={{
-                          display: 'block',
-                          mx: 'auto',
-                          mt: 2,
-                          color: '#1565c0',
-                          bgcolor: '#f5fafd',
-                          borderRadius: '999px',
-                          px: 3,
-                          py: 1,
-                          fontWeight: 500,
-                          fontSize: '1rem',
-                          boxShadow: 'none',
-                          textTransform: 'none',
-                          '&:hover': {
-                            bgcolor: '#e3f0fc',
-                            boxShadow: 'none',
-                          },
-                        }}
-                        disableElevation
-                        variant="text"
-                      >
-                        {expandedPlayerId === player.playerId ? 'Hide full player report' : 'See full player report'}
-                      </Button>
-                    </Box>
-                  )}
+      {/* Divider */}
+      <Box sx={{ height: 8 }} />
 
+      {/* Scouting Reports (Expanded Section) */}
+      {expandedPlayerId === player.playerId && (
+        <Box sx={{ px: { xs: 2, md: 6 }, py: 4, width: '100%' }}>
+          <Typography variant="h6" gutterBottom sx={{ fontWeight: 700 }}>
+            Scouting Report by {selectedScout === "allScouts" ? "All Scouts" : selectedScout}
+          </Typography>
+          {(() => {
+            const allReports = playerDataService.getPlayerScoutingReports(player.playerId);
+            const filteredReports = selectedScout === "allScouts"
+              ? allReports
+              : allReports.filter(report => report.scout === selectedScout);
+            return filteredReports.length === 0 ? (
+              <Typography variant="body2" color="text.secondary">
+                No reports available for this player by {selectedScout === "allScouts" ? "All Scouts" : selectedScout}.
+              </Typography>
+            ) : (
+              filteredReports.map(report => (
+                <Box key={report.reportId} sx={{ mb: 2 }}>
+                  <Typography variant="subtitle2" sx={{ mb: 0.5, fontWeight: 700 }}>
+                    {report.scout}
+                  </Typography>
+                  <Typography variant="body1" color="text.secondary">
+                    {report.report}
+                  </Typography>
                 </Box>
-              </Box>
-            </Paper>
-          );
-        })}
+              ))
+            );
+          })()}
+        </Box>
+      )}
+
+      {/* Expand Button */}
+      <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', bgcolor: '#fff', py: 4 }}>
+      <Button
+        onClick={() => setExpandedPlayerId(expandedPlayerId === player.playerId ? null : player.playerId)}
+        sx={{
+          border: '1px solid #075A99',
+          borderRadius: '999px',
+          px: 3,
+          py: 1,
+          fontWeight: 600,
+          fontSize: '1rem', // smaller text
+          color: '#075A99',
+          bgcolor: '#fff',
+          textTransform: 'none',
+          '&:hover': {
+            bgcolor: '#f5fafd',
+            borderColor: '#075A99',
+          },
+        }}
+        variant="outlined"
+      >
+        {expandedPlayerId === player.playerId ? 'Hide Report' : 'See Full Report'}
+      </Button>
+
+      </Box>
+    </Paper>
+  );
+})}
+
       </Box>
     </Box>
   );
