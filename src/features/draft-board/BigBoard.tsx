@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { scoutRankings } from '../../data';
 import type { PlayerBio as BasePlayerBio } from '../../types/player.types';
 import { playerBios as rawPlayerBios } from '../../data';
+import { playerSummaries } from '../../data';
 
 // Extend the base PlayerBio with additional properties
 interface PlayerBio extends BasePlayerBio {
@@ -59,6 +60,12 @@ interface PlayerSummary {
   weight: number;
   photoUrl?: string;
 }
+
+// Add this helper function to get player summary
+const getPlayerSummary = (playerId: number): string | undefined => {
+  const summary = playerSummaries.find(s => s.playerId === playerId);
+  return summary?.summary;
+};
 
 const BigBoard: React.FC = () => {
   const navigate = useNavigate();
@@ -233,7 +240,7 @@ const BigBoard: React.FC = () => {
                 <Box sx={{ flexGrow: 1 }}>
                   <Typography variant="h6" gutterBottom>Summary</Typography>
                   <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
-                    {(player as PlayerSummary).summary || 'No summary available.'}
+                    {getPlayerSummary(player.playerId) || 'No summary available.'}
                   </Typography>
 
                   {/* Scout Rankings */}
