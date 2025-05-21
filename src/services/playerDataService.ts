@@ -7,8 +7,8 @@ import type {
   GameLog,
   SeasonLog,
   ScoutingReport
-} from '../types/player.types';
-import playerData from '../data/intern_project_data.json';
+} from '../types/player.types.js';
+import internData from '../data/intern_project_data.json';
 
 class PlayerDataService {
   private data: PlayerData;
@@ -18,12 +18,15 @@ class PlayerDataService {
   }
 
   private processData(): PlayerData {
-    const bios = playerData.bio as PlayerBio[];
-    const rankings = playerData.scoutRankings as ScoutRanking[];
-    const measurements = playerData.measurements as PlayerMeasurements[];
-    const gameLogs = playerData.game_logs as GameLog[];
-    const seasonLogs = (playerData.seasonLogs as unknown) as SeasonLog[];
-    const scoutingReports = playerData.scoutingReports as ScoutingReport[];
+    // Use the imported JSON data directly instead of reading from file system
+    const rawData = internData;
+    
+    const bios = rawData.bio as PlayerBio[];
+    const rankings = rawData.scoutRankings as ScoutRanking[];
+    const measurements = rawData.measurements as PlayerMeasurements[];
+    const gameLogs = rawData.game_logs as GameLog[];
+    const seasonLogs = (rawData.seasonLogs as unknown) as SeasonLog[];
+    const scoutingReports = rawData.scoutingReports as ScoutingReport[];
 
     const stats: PlayerStats = {
       totalPlayers: bios.length,
