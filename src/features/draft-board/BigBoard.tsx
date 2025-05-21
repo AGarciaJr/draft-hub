@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Box, Typography, Paper, Chip, Select, MenuItem, FormControl, InputLabel, Link as MuiLink } from '@mui/material';
+import { Box, Typography, Paper, Chip, Select, MenuItem, FormControl, InputLabel, Link as MuiLink, Collapse, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { scoutRankings, playerSummaries } from '../../data';
 import type { PlayerBio as BasePlayerBio } from '../../types/player.types';
@@ -70,6 +70,7 @@ const BigBoard: React.FC = () => {
   const navigate = useNavigate();
   const [sortBy, setSortBy] = useState<'avgRank' | string>('avgRank');
   const [selectedScout, setSelectedScout] = useState<string>('allScouts');
+  const [expandedPlayerId, setExpandedPlayerId] = useState<number | null>(null);
 
   // Get unique scout names from the scouting reports
   const availableScouts = useMemo(() => {
@@ -344,33 +345,61 @@ const BigBoard: React.FC = () => {
                   {/* Scout Report Section - Only show if a scout is selected and has a report */}
                   {selectedScout && (
                     <Box sx={{ mt: 3 }}>
-                      <Typography variant="h6" gutterBottom>
-                        Scouting Reports by {selectedScout === "allScouts" ? "All Scouts" : selectedScout}
-                      </Typography>
+                      <Button
+                        onClick={() => setExpandedPlayerId(expandedPlayerId === player.playerId ? null : player.playerId)}
+                        sx={{
+                          display: 'block',
+                          mx: 'auto',
+                          mb: 2,
+                          color: '#1565c0',
+                          bgcolor: '#f5fafd',
+                          borderRadius: '999px',
+                          px: 3,
+                          py: 1,
+                          fontWeight: 500,
+                          fontSize: '1rem',
+                          boxShadow: 'none',
+                          textTransform: 'none',
+                          '&:hover': {
+                            bgcolor: '#e3f0fc',
+                            boxShadow: 'none',
+                          },
+                        }}
+                        disableElevation
+                        variant="text"
+                      >
+                        {expandedPlayerId === player.playerId ? 'Hide full player report' : 'See full player report'}
+                      </Button>
 
-                      {(() => {
-                        const allReports = playerDataService.getPlayerScoutingReports(player.playerId);
-                        const filteredReports = selectedScout === "allScouts"
-                          ? allReports
-                          : allReports.filter(report => report.scout === selectedScout);
+                      <Collapse in={expandedPlayerId === player.playerId}>
+                        <Typography variant="h6" gutterBottom>
+                          Scouting Reports by {selectedScout === "allScouts" ? "All Scouts" : selectedScout}
+                        </Typography>
 
-                        return filteredReports.length === 0 ? (
-                          <Typography variant="body2" color="text.secondary">
-                            No reports available for this player by {selectedScout === "allScouts" ? "All Scouts" : selectedScout}.
-                          </Typography>
-                        ) : (
-                          filteredReports.map(report => (
-                            <Box key={report.reportId} sx={{ mb: 2 }}>
-                              <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
-                                {report.scout}
-                              </Typography>
-                              <Typography variant="body1" color="text.secondary">
-                                {report.report}
-                              </Typography>
-                            </Box>
-                          ))
-                        );
-                      })()}
+                        {(() => {
+                          const allReports = playerDataService.getPlayerScoutingReports(player.playerId);
+                          const filteredReports = selectedScout === "allScouts"
+                            ? allReports
+                            : allReports.filter(report => report.scout === selectedScout);
+
+                          return filteredReports.length === 0 ? (
+                            <Typography variant="body2" color="text.secondary">
+                              No reports available for this player by {selectedScout === "allScouts" ? "All Scouts" : selectedScout}.
+                            </Typography>
+                          ) : (
+                            filteredReports.map(report => (
+                              <Box key={report.reportId} sx={{ mb: 2 }}>
+                                <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
+                                  {report.scout}
+                                </Typography>
+                                <Typography variant="body1" color="text.secondary">
+                                  {report.report}
+                                </Typography>
+                              </Box>
+                            ))
+                          );
+                        })()}
+                      </Collapse>
                     </Box>
                   )}
 
