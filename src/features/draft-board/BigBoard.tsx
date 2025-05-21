@@ -1,10 +1,11 @@
 import React, { useState, useMemo } from 'react';
-import { Box, Typography, Paper, Link as MuiLink, Chip, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+import { Box, Typography, Paper, Chip, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { scoutRankings } from '../../data';
+import { scoutRankings, playerSummaries } from '../../data';
 import type { PlayerBio as BasePlayerBio } from '../../types/player.types';
 import { playerBios as rawPlayerBios } from '../../data';
-import { playerSummaries } from '../../data';
+import StarIcon from '@mui/icons-material/Star';
+import { playerDataService } from '../../services/playerDataService';
 
 // Extend the base PlayerBio with additional properties
 interface PlayerBio extends BasePlayerBio {
@@ -49,22 +50,20 @@ const calculateAverageRank = (playerRankingData: ScoutRanking | undefined): { av
   return { avg, count };
 };
 
-// Add interface for player summary
-interface PlayerSummary {
-  summary?: string;
-  class?: string;
-  age?: number;
-  name: string;
-  playerId: number;
-  height: number;
-  weight: number;
-  photoUrl?: string;
-}
-
 // Add this helper function to get player summary
 const getPlayerSummary = (playerId: number): string | undefined => {
   const summary = playerSummaries.find(s => s.playerId === playerId);
   return summary?.summary;
+};
+
+const getBaseScoutName = (scoutName: string) => scoutName.replace(/ Rank.*$/, '').trim();
+
+const hasScoutingReport = (playerId: number, scoutName: string): boolean => {
+  const baseName = getBaseScoutName(scoutName);
+  // Use .scout, not .scoutName
+  return playerDataService.getAllScoutingReports().some(
+    (report) => report.playerId === playerId && report.scout === baseName
+  );
 };
 
 const BigBoard: React.FC = () => {
@@ -290,16 +289,27 @@ const BigBoard: React.FC = () => {
                   <Typography variant="h6" gutterBottom>Scout Rankings</Typography>
                   <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                     {scoutNames.map(scoutName => {
-                      // Use type assertion assuming ranking is ScoutRanking
                       const scoutRank = ranking ? (ranking as ScoutRanking)[scoutName] : undefined;
                       if (scoutRank == null) return null;
 
                       const rankColor = isHighRanking(scoutRank) ? 'success' : isLowRanking(scoutRank) ? 'error' : 'default';
+                      const showStar = hasScoutingReport(player.playerId, scoutName);
 
                       return (
                         <Chip
                           key={scoutName}
-                          label={`${scoutName}: ${scoutRank}`}
+                          label={
+                            <span>
+                              {scoutName}: {scoutRank}
+                              {showStar && (
+                                <StarIcon
+                                  sx={{ ml: 0.5, color: '#FFD700', verticalAlign: 'middle' }}
+                                  fontSize="small"
+                                  titleAccess="Scouting report available"
+                                />
+                              )}
+                            </span>
+                          }
                           color={rankColor}
                           size="small"
                         />
