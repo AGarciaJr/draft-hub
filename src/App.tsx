@@ -61,6 +61,11 @@ function App() {
       <CssBaseline />
       <AppBar position="static" color="primary">
         <Toolbar>
+          <img
+            src="/logo.png"
+            alt="NextGen Logo"
+            style={{ height: 40, marginRight: 16, borderRadius: 8, background: '#fff' }}
+          />
           <Button color="inherit" component={Link} to="/">Home</Button>
           <Button color="inherit" component={Link} to="/draft-board">Draft Board</Button>
           <Button color="inherit" component={Link} to="/profiles">Profiles</Button>
