@@ -27,5 +27,9 @@
 
     "outDir": "./dist"
   },
-  "include": ["src"]
+  "include": [
+    "src",
+    "src/**/*.json",
+    "src/**/*.css"
+  ]
 }
