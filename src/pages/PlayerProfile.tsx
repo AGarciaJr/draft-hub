@@ -5,24 +5,28 @@ import { Box, Typography, Paper, Container, Divider } from '@mui/material';
 import ScoutingReportForm from '../components/ScoutingReportForm';
 import ScoutingReportList from '../components/ScoutingReportList';
 import type { ScoutingReport } from '../types/player.types';
+import playerSummaries from '../data/player_summaries.json';
 
 const PlayerProfile: React.FC = () => {
   const { playerId } = useParams();
-  console.log(playerId);
   const numericPlayerId = Number(playerId);
-  console.log(numericPlayerId);
-
   const player = playerDataService.getPlayerById(numericPlayerId);
 
   // Get existing reports from the JSON
   const existingReports = playerDataService.getScoutingReportsByPlayerId(numericPlayerId);
-  console.log(existingReports);
 
   // Track user-added reports
   const [userReports, setUserReports] = useState<ScoutingReport[]>([]);
 
   // Combine both for display
   const combinedReports = [...existingReports, ...userReports];
+
+  const summaryEntry = playerSummaries.find(
+    (s) => s.playerId === player?.playerId
+  );
+  const playerSummary = summaryEntry?.summary || null;
+
+  console.log('playerSummary:', playerSummary);
 
   if (!player) {
     return (
@@ -86,6 +90,19 @@ const PlayerProfile: React.FC = () => {
             <Typography variant="h3" gutterBottom>
               {player.name}
             </Typography>
+
+            {playerSummary ? (
+              <Typography 
+                variant="subtitle1"
+                fontStyle="italic"
+                color="text.secondary"
+                sx={{ mb: 2 }}
+                gutterBottom>
+                {playerSummary}
+              </Typography>
+            ) : (
+              <Typography color="red">NO SUMMARY FOUND</Typography>
+            )}
 
             <Box
               sx={{
