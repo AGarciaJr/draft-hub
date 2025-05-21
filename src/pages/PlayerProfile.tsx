@@ -5,6 +5,7 @@ import { Box, Typography, Paper, Container, Divider } from '@mui/material';
 import ScoutingReportForm from '../components/ScoutingReportForm';
 import ScoutingReportList from '../components/ScoutingReportList';
 import type { ScoutingReport } from '../types/player.types';
+import  playerSummaries  from '../data/player_summaries.json';
 
 const PlayerProfile: React.FC = () => {
   const { playerId } = useParams();
@@ -24,6 +25,13 @@ const PlayerProfile: React.FC = () => {
   // Combine both for display
   const combinedReports = [...existingReports, ...userReports];
 
+  const player = playerDataService.getPlayerById(Number(playerId));
+  
+  const summaryEntry = playerSummaries.find(
+    (s) => s.playerId === player?.playerId
+  );
+  const playerSummary = summaryEntry?.summary || null;
+  
   if (!player) {
     return (
       <Container>
@@ -97,6 +105,26 @@ const PlayerProfile: React.FC = () => {
                 gap: 2,
               }}
             >
+
+            {playerSummary && (
+              <Typography 
+                variant="subtitle1"
+                fontStyle="italic"
+                color="text.secondary"
+                sx={{ mb: 2 }}
+                gutterBottom>
+                {playerSummary}
+              </Typography>
+            )}
+            
+            <Box sx={{ 
+              display: 'grid',
+              gridTemplateColumns: {
+                xs: '1fr',
+                sm: 'repeat(2, 1fr)'
+              },
+              gap: 2
+            }}>
               <Box>
                 <Typography variant="subtitle1" color="text.secondary">
                   Current Team
