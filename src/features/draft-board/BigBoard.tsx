@@ -69,7 +69,7 @@ const hasScoutingReport = (playerId: number, scoutName: string): boolean => {
 const BigBoard: React.FC = () => {
   const navigate = useNavigate();
   const [sortBy, setSortBy] = useState<'avgRank' | string>('avgRank');
-  const [selectedScout, setSelectedScout] = useState<string>('');
+  const [selectedScout, setSelectedScout] = useState<string>('allScouts');
 
   // Get unique scout names from the scouting reports
   const availableScouts = useMemo(() => {
@@ -173,9 +173,7 @@ const BigBoard: React.FC = () => {
             label="Reports By"
             onChange={(e) => setSelectedScout(e.target.value)}
           >
-            <MenuItem value="">
-              <em>All Scouts</em>
-            </MenuItem>
+            <MenuItem value="allScouts">All Scouts</MenuItem>
             {availableScouts.map(scout => (
               <MenuItem key={scout} value={scout}>{scout}</MenuItem>
             ))}
@@ -346,29 +344,31 @@ const BigBoard: React.FC = () => {
                   {/* Scout Report Section - Only show if a scout is selected and has a report */}
                   {selectedScout && (
                     <Box sx={{ mt: 3 }}>
-                      {playerDataService.getPlayerScoutingReports(player.playerId)
-                        .filter(report => report.scout === selectedScout)
-                        .map(report => (
-                          <Box key={report.reportId}>
-                            <Typography variant="h6" gutterBottom>
-                              Scouting Report by {report.scout}
-                            </Typography>
-                            <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
-                              {report.report}
-                            </Typography>
-                          </Box>
-                        ))}
-                      <Box sx={{ mt: 2, textAlign: 'right' }}>
-                        <MuiLink
-                          component="button"
-                          variant="button"
-                          onClick={() => navigate(`/profiles/${player.playerId}`)}
-                        >
-                          See full player report
-                        </MuiLink>
-                      </Box>
+                      <Typography variant="h6" gutterBottom>
+                        Scouting Reports by {selectedScout}
+                      </Typography>
+
+                      {playerDataService
+                        .getPlayerScoutingReports(player.playerId)
+                        .filter(report => report.scout === selectedScout).length === 0 ? (
+                        <Typography variant="body2" color="text.secondary">
+                          No reports available for this player by {selectedScout}.
+                        </Typography>
+                      ) : (
+                        playerDataService
+                          .getPlayerScoutingReports(player.playerId)
+                          .filter(report => report.scout === selectedScout)
+                          .map(report => (
+                            <Box key={report.reportId} sx={{ mb: 2 }}>
+                              <Typography variant="body1" color="text.secondary">
+                                {report.report}
+                              </Typography>
+                            </Box>
+                          ))
+                      )}
                     </Box>
                   )}
+
                 </Box>
               </Box>
             </Paper>
