@@ -205,13 +205,56 @@ const BigBoard: React.FC = () => {
               {/* Player Main Content */}
               <Box sx={{ display: 'flex', p: 2, gap: 3, flexDirection: { xs: 'column', md: 'row' } }}>
                 {/* Player Image and Basic Info */}
-                <Box sx={{ flexShrink: 0, width: { xs: '100%', md: 250 }, textAlign: 'center' }}>
+                <Box
+                  sx={{
+                    flexShrink: 0,
+                    width: { xs: '100%', md: 250 },
+                    textAlign: 'center',
+                    position: 'relative',
+                    cursor: 'pointer',
+                    '&:hover .profile-overlay': {
+                      opacity: 1,
+                    },
+                  }}
+                  onClick={() => navigate(`/profiles/${player.playerId}`)}
+                >
                   <Box
                     component="img"
-                    src={player.photoUrl || 'https://cdn.nba.com/headshots/nba/latest/1040x760/1631244.png'} 
+                    src={player.photoUrl || 'https://cdn.nba.com/headshots/nba/latest/1040x760/1631244.png'}
                     alt={player.name}
-                    sx={{ width: '100%', height: 'auto', objectFit: 'contain', borderRadius: 1 }}
+                    sx={{
+                      width: '100%',
+                      height: 'auto',
+                      objectFit: 'contain',
+                      borderRadius: 1,
+                      display: 'block',
+                    }}
                   />
+                  <Box
+                    className="profile-overlay"
+                    sx={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      width: '100%',
+                      height: '100%',
+                      bgcolor: 'rgba(0,0,0,0.6)',
+                      color: 'white',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      borderRadius: 1,
+                      opacity: 0,
+                      transition: 'opacity 0.2s',
+                      fontSize: 24,
+                      fontWeight: 600,
+                      pointerEvents: 'none', // So the click still goes to the parent
+                      zIndex: 2,
+                      userSelect: 'none',
+                    }}
+                  >
+                    View Profile
+                  </Box>
                   <Box sx={{ display: 'flex', justifyContent: 'space-around', mt: 1 }}>
                     <Box>
                       <Typography variant="body1" sx={{ fontWeight: 600 }}>{getHeightString(player.height)}</Typography>
@@ -265,12 +308,6 @@ const BigBoard: React.FC = () => {
                   </Box>
 
                   {/* Placeholder for Comparisons/Attributes if needed later */}
-
-                  <Box sx={{ mt: 3, textAlign: 'right' }}>
-                    <MuiLink component="button" variant="button" onClick={() => navigate(`/profiles/${player.playerId}`)}>
-                      See full player report
-                    </MuiLink>
-                  </Box>
                 </Box>
               </Box>
             </Paper>
