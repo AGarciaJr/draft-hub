@@ -7,8 +7,13 @@ import type {
   GameLog,
   SeasonLog,
   ScoutingReport
-} from '../types/player.types';
-import playerData from '../data/intern_project_data.json';
+} from '../types/player.types.js';
+import * as fs from 'fs';
+import * as path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 class PlayerDataService {
   private data: PlayerData;
@@ -18,12 +23,15 @@ class PlayerDataService {
   }
 
   private processData(): PlayerData {
-    const bios = playerData.bio as PlayerBio[];
-    const rankings = playerData.scoutRankings as ScoutRanking[];
-    const measurements = playerData.measurements as PlayerMeasurements[];
-    const gameLogs = playerData.game_logs as GameLog[];
-    const seasonLogs = (playerData.seasonLogs as unknown) as SeasonLog[];
-    const scoutingReports = playerData.scoutingReports as ScoutingReport[];
+    const jsonPath = path.join(process.cwd(), 'src', 'data', 'intern_project_data.json');
+    const rawData = JSON.parse(fs.readFileSync(jsonPath, 'utf-8'));
+    
+    const bios = rawData.bio as PlayerBio[];
+    const rankings = rawData.scoutRankings as ScoutRanking[];
+    const measurements = rawData.measurements as PlayerMeasurements[];
+    const gameLogs = rawData.game_logs as GameLog[];
+    const seasonLogs = (rawData.seasonLogs as unknown) as SeasonLog[];
+    const scoutingReports = rawData.scoutingReports as ScoutingReport[];
 
     const stats: PlayerStats = {
       totalPlayers: bios.length,
