@@ -22,3 +22,11 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Clean up accidental JS outputs in src
+src/**/*.js
+src/**/*.d.ts
+
+# Output folder from tsc
+/dist
+

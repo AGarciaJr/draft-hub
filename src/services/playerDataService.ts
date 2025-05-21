@@ -8,8 +8,7 @@ import type {
   SeasonLog,
   ScoutingReport
 } from '../types/player.types.js';
-import * as fs from 'fs';
-import * as path from 'path';
+import internData from '../data/intern_project_data.json';
 
 class PlayerDataService {
   private data: PlayerData;
@@ -19,8 +18,8 @@ class PlayerDataService {
   }
 
   private processData(): PlayerData {
-    const jsonPath = path.join(process.cwd(), 'src', 'data', 'intern_project_data.json');
-    const rawData = JSON.parse(fs.readFileSync(jsonPath, 'utf-8'));
+    // Use the imported JSON data directly instead of reading from file system
+    const rawData = internData;
     
     const bios = rawData.bio as PlayerBio[];
     const rankings = rawData.scoutRankings as ScoutRanking[];
