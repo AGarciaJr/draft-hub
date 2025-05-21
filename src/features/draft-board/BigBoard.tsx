@@ -312,7 +312,7 @@ const BigBoard: React.FC = () => {
 
                   {/* Scout Rankings */}
                   <Typography variant="h6" gutterBottom>Scout Rankings</Typography>
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, justifyContent: 'center' }}>
                     {scoutNames.map(scoutName => {
                       const scoutRank = ranking ? (ranking as ScoutRanking)[scoutName] : undefined;
                       if (scoutRank == null) return null;
@@ -345,12 +345,39 @@ const BigBoard: React.FC = () => {
                   {/* Scout Report Section - Only show if a scout is selected and has a report */}
                   {selectedScout && (
                     <Box sx={{ mt: 3 }}>
+                      <Collapse in={expandedPlayerId === player.playerId}>
+                        <Typography variant="h6" gutterBottom>
+                          Scouting Reports by {selectedScout === "allScouts" ? "All Scouts" : selectedScout}
+                        </Typography>
+                        {(() => {
+                          const allReports = playerDataService.getPlayerScoutingReports(player.playerId);
+                          const filteredReports = selectedScout === "allScouts"
+                            ? allReports
+                            : allReports.filter(report => report.scout === selectedScout);
+                          return filteredReports.length === 0 ? (
+                            <Typography variant="body2" color="text.secondary">
+                              No reports available for this player by {selectedScout === "allScouts" ? "All Scouts" : selectedScout}.
+                            </Typography>
+                          ) : (
+                            filteredReports.map(report => (
+                              <Box key={report.reportId} sx={{ mb: 2 }}>
+                                <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
+                                  {report.scout}
+                                </Typography>
+                                <Typography variant="body1" color="text.secondary">
+                                  {report.report}
+                                </Typography>
+                              </Box>
+                            ))
+                          );
+                        })()}
+                      </Collapse>
                       <Button
                         onClick={() => setExpandedPlayerId(expandedPlayerId === player.playerId ? null : player.playerId)}
                         sx={{
                           display: 'block',
                           mx: 'auto',
-                          mb: 2,
+                          mt: 2,
                           color: '#1565c0',
                           bgcolor: '#f5fafd',
                           borderRadius: '999px',
@@ -370,36 +397,6 @@ const BigBoard: React.FC = () => {
                       >
                         {expandedPlayerId === player.playerId ? 'Hide full player report' : 'See full player report'}
                       </Button>
-
-                      <Collapse in={expandedPlayerId === player.playerId}>
-                        <Typography variant="h6" gutterBottom>
-                          Scouting Reports by {selectedScout === "allScouts" ? "All Scouts" : selectedScout}
-                        </Typography>
-
-                        {(() => {
-                          const allReports = playerDataService.getPlayerScoutingReports(player.playerId);
-                          const filteredReports = selectedScout === "allScouts"
-                            ? allReports
-                            : allReports.filter(report => report.scout === selectedScout);
-
-                          return filteredReports.length === 0 ? (
-                            <Typography variant="body2" color="text.secondary">
-                              No reports available for this player by {selectedScout === "allScouts" ? "All Scouts" : selectedScout}.
-                            </Typography>
-                          ) : (
-                            filteredReports.map(report => (
-                              <Box key={report.reportId} sx={{ mb: 2 }}>
-                                <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
-                                  {report.scout}
-                                </Typography>
-                                <Typography variant="body1" color="text.secondary">
-                                  {report.report}
-                                </Typography>
-                              </Box>
-                            ))
-                          );
-                        })()}
-                      </Collapse>
                     </Box>
                   )}
 
