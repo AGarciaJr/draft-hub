@@ -66,6 +66,20 @@ const hasScoutingReport = (playerId: number, scoutName: string): boolean => {
   );
 };
 
+// Add this helper function to calculate age from birthDate
+function getAgeFromBirthDate(birthDate: string): number | null {
+  if (!birthDate) return null;
+  const birth = new Date(birthDate);
+  if (isNaN(birth.getTime())) return null;
+  const today = new Date();
+  let age = today.getFullYear() - birth.getFullYear();
+  const m = today.getMonth() - birth.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) {
+    age--;
+  }
+  return age;
+}
+
 const BigBoard: React.FC = () => {
   const navigate = useNavigate();
   const [sortBy, setSortBy] = useState<'avgRank' | string>('avgRank');
@@ -312,9 +326,9 @@ const BigBoard: React.FC = () => {
                 <Typography variant="body2" color="text.secondary">Class</Typography>
               </Box>
             )}
-            {player.age && (
+            {player.birthDate && (
               <Box>
-                <Typography variant="h6" sx={{ fontWeight: 700 }}>{player.age}</Typography>
+                <Typography variant="h6" sx={{ fontWeight: 700 }}>{getAgeFromBirthDate(player.birthDate)}</Typography>
                 <Typography variant="body2" color="text.secondary">Age</Typography>
               </Box>
             )}
