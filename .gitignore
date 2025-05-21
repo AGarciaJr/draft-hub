@@ -29,3 +29,5 @@ src/**/*.js
 # Output folder from tsc
 /dist
 
+# Ignore the virtual environment
+venv
