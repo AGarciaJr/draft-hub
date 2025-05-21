@@ -345,27 +345,32 @@ const BigBoard: React.FC = () => {
                   {selectedScout && (
                     <Box sx={{ mt: 3 }}>
                       <Typography variant="h6" gutterBottom>
-                        Scouting Reports by {selectedScout}
+                        Scouting Reports by {selectedScout === "allScouts" ? "All Scouts" : selectedScout}
                       </Typography>
 
-                      {playerDataService
-                        .getPlayerScoutingReports(player.playerId)
-                        .filter(report => report.scout === selectedScout).length === 0 ? (
-                        <Typography variant="body2" color="text.secondary">
-                          No reports available for this player by {selectedScout}.
-                        </Typography>
-                      ) : (
-                        playerDataService
-                          .getPlayerScoutingReports(player.playerId)
-                          .filter(report => report.scout === selectedScout)
-                          .map(report => (
+                      {(() => {
+                        const allReports = playerDataService.getPlayerScoutingReports(player.playerId);
+                        const filteredReports = selectedScout === "allScouts"
+                          ? allReports
+                          : allReports.filter(report => report.scout === selectedScout);
+
+                        return filteredReports.length === 0 ? (
+                          <Typography variant="body2" color="text.secondary">
+                            No reports available for this player by {selectedScout === "allScouts" ? "All Scouts" : selectedScout}.
+                          </Typography>
+                        ) : (
+                          filteredReports.map(report => (
                             <Box key={report.reportId} sx={{ mb: 2 }}>
+                              <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
+                                {report.scout}
+                              </Typography>
                               <Typography variant="body1" color="text.secondary">
                                 {report.report}
                               </Typography>
                             </Box>
                           ))
-                      )}
+                        );
+                      })()}
                     </Box>
                   )}
 
