@@ -6,6 +6,9 @@ import ScoutingReportForm from '../components/ScoutingReportForm';
 import ScoutingReportList from '../components/ScoutingReportList';
 import type { ScoutingReport } from '../types/player.types';
 import playerSummaries from '../data/player_summaries.json' with { type: 'json' };
+import scrapedPositions from '../data/processed/scraped_positions.json' with { type: 'json' };
+
+const nameToPositionMap = new Map<string, string>(Object.entries(scrapedPositions));
 
 const PlayerProfile: React.FC = () => {
   const { playerId } = useParams();
@@ -89,6 +92,10 @@ const PlayerProfile: React.FC = () => {
           <Box>
             <Typography variant="h3" gutterBottom>
               {player.name}
+            </Typography>
+
+            <Typography variant="h5" color="text.secondary" gutterBottom>
+              {nameToPositionMap.get(player.name) || 'Unknown'}
             </Typography>
 
             {playerSummary ? (

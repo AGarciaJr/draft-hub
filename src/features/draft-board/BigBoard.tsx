@@ -8,6 +8,9 @@ import StarIcon from '@mui/icons-material/Star';
 import { playerDataService } from '../../services/playerDataService';
 import playerClassesPositionsData from '../../data/player_classes_positions.json' with { type: 'json' };
 import schoolColorsLogos from '../../data/school_colors_logos.json' with { type: 'json' };
+import scrapedPositions from '../../data/processed/scraped_positions.json' with { type: 'json' };
+
+const nameToPositionMap = new Map<string, string>(Object.entries(scrapedPositions));
 
 // Helper function to get player class and position
 const getPlayerClassAndPosition = (playerName: string) => {
@@ -266,7 +269,7 @@ const BigBoard: React.FC = () => {
               sx={{ fontSize: '1.1rem', fontWeight: 400, color: '#fff', ml: 2 }}
             >
               {(() => {
-                const { position } = getPlayerClassAndPosition(player.name);
+                const position = nameToPositionMap.get(player.name) || 'Unknown';
                 return position ? `${position}` : '';
               })()} {player.currentTeam ? `• ${player.currentTeam}` : ''}
             </Typography>
