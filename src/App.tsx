@@ -5,6 +5,7 @@ import BigBoard from './features/draft-board/BigBoard';
 import AdminDashboard from './pages/AdminDashboard';
 import ProfilesPage from './pages/ProfilesPage';
 import PlayerProfile from './pages/PlayerProfile';
+import SummaryPanel from './components/SummaryPanel';
 
 const theme = createTheme({
   palette: {
@@ -50,6 +51,7 @@ function Home() {
       <Typography variant="h5" component="h2" gutterBottom align="center" color="secondary.main">
         The Next Generation of Basketball Superstars
       </Typography>
+      <SummaryPanel />
       <PlayerCarousel />
     </Box>
   );
