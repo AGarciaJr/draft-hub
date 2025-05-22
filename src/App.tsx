@@ -62,7 +62,7 @@ function App() {
       <AppBar position="static" color="primary">
         <Toolbar>
           <img
-            src="/logo.png"
+            src="/assets/logos/logo.png"
             alt="NextGen Logo"
             style={{ height: 40, marginRight: 16, borderRadius: 8, background: '#fff' }}
           />
