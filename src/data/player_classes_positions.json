@@ -1,0 +1,112 @@
+{
+  "players": [
+    {
+      "name": "Cooper Flagg",
+      "position": "Forward",
+      "class": "FR",
+      "school": "Duke"
+    },
+    {
+      "name": "Dylan Harper",
+      "position": "Guard",
+      "class": "FR",
+      "school": "Rutgers"
+    },
+    {
+      "name": "Ace Bailey",
+      "position": "Forward",
+      "class": "FR",
+      "school": "Rutgers"
+    },
+    {
+      "name": "Tre Johnson",
+      "position": "Guard",
+      "class": "FR",
+      "school": "Texas"
+    },
+    {
+      "name": "Kon Knueppel",
+      "position": "Wing",
+      "class": "FR",
+      "school": "Duke"
+    },
+    {
+      "name": "VJ Edgecombe",
+      "position": "Wing",
+      "class": "FR",
+      "school": "Baylor"
+    },
+    {
+      "name": "Ryan Nembhard",
+      "position": "Guard",
+      "class": "SR",
+      "school": "Gonzaga"
+    },
+    {
+      "name": "Payton Sandfort",
+      "position": "Forward",
+      "class": null,
+      "school": "Iowa"
+    },
+    {
+      "name": "Tyrese Proctor",
+      "position": "Guard",
+      "class": "JR",
+      "school": "Duke"
+    },
+    {
+      "name": "Johni Broome",
+      "position": "Big",
+      "class": "SR",
+      "school": "Auburn"
+    },
+    {
+      "name": "Eric Dixon",
+      "position": "Forward",
+      "class": "SR",
+      "school": "Villanova"
+    },
+    {
+      "name": "Alijah Martin",
+      "position": "Wing",
+      "class": "SR",
+      "school": "Florida"
+    },
+    {
+      "name": "Brice Williams",
+      "position": "Wing",
+      "class": "SR",
+      "school": "Nebraska"
+    },
+    {
+      "name": "Michael Ruzic",
+      "position": "Forward",
+      "class": null,
+      "school": "Joventut"
+    },
+    {
+      "name": "RJ Luis Jr.",
+      "position": "Forward",
+      "class": "JR",
+      "school": "St. John's"
+    },
+    {
+      "name": "Izan Almansa",
+      "position": "Big",
+      "class": null,
+      "school": "Perth Wildcats"
+    },
+    {
+      "name": "Mark Sears",
+      "position": "Guard",
+      "class": "SR",
+      "school": "Alabama"
+    },
+    {
+      "name": "Dink Pate",
+      "position": "Forward",
+      "class": null,
+      "school": "Mexico City Capitanes"
+    }
+  ]
+} 
