@@ -1,11 +1,10 @@
-import { ThemeProvider, createTheme, CssBaseline, Container, Typography, Box, AppBar, Toolbar, Button } from '@mui/material';
-import { Routes, Route, Link } from 'react-router-dom';
+import { ThemeProvider, createTheme, CssBaseline, Box, } from '@mui/material';
+import { Routes, Route } from 'react-router-dom';
 import PlayerCarousel from './components/PlayerCarousel';
 import BigBoard from './features/draft-board/BigBoard';
 import AdminDashboard from './pages/AdminDashboard';
 import ProfilesPage from './pages/ProfilesPage';
 import PlayerProfile from './pages/PlayerProfile';
-import SummaryPanel from './components/SummaryPanel';
 import NavBar from './components/NavBar';
 import Hero from './components/Hero';
 
@@ -48,7 +47,6 @@ function Home() {
   return (
     <Box sx={{ my: 4 }}>
       <Hero />
-      <SummaryPanel />
       <PlayerCarousel />
     </Box>
   );
@@ -58,16 +56,24 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <NavBar />
-      <Routes>
+      <Box
+        sx={{
+          minHeight: '100vh',
+          width: '100%',
+          overflow: 'hidden',
+          position: 'relative',
+          backgroundColor: 'background.default'
+        }}
+      >
+        <NavBar />
+        <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/draft-board" element={<BigBoard />} />
-          
           <Route path="/admin" element={<AdminDashboard />} />
-          
           <Route path="/profiles" element={<ProfilesPage />} />
           <Route path="/profiles/:playerId" element={<PlayerProfile />} />
         </Routes>
+      </Box>
     </ThemeProvider>
   );
 }
