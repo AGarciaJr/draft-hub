@@ -47,6 +47,29 @@ interface GameLog {
   rn: number;
 }
 
+// Add this interface before the main() function
+interface PlayerAnalysis {
+  playerName: string;
+  position: string;
+  analysis: {
+    stat1: {
+      stat: string;
+      value: string;
+      explanation: string;
+    };
+    stat2: {
+      stat: string;
+      value: string;
+      explanation: string;
+    };
+    stat3: {
+      stat: string;
+      value: string;
+      explanation: string;
+    };
+  };
+}
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -223,7 +246,7 @@ const checkPlayerStats = () => {
 const main = async () => {
   checkPlayerStats(); // Add this line at the start of main()
   
-  const allAnalyses: any[] = [];
+  const allAnalyses: PlayerAnalysis[] = [];
 
   for (const player of players) {
     const prompt = generatePrompt(player);
