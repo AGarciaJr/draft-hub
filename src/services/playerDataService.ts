@@ -241,7 +241,19 @@ class PlayerDataService {
       report => report.playerId === playerId
     );
   }
-  
+
+  public getAllScouts(): string[] {
+    // Get all unique scout names from the rankings data
+    const scoutNames = new Set<string>();
+    this.data.data.rankings.forEach(ranking => {
+      Object.keys(ranking).forEach(key => {
+        if (key !== 'playerId' && key.includes('Rank')) {
+          scoutNames.add(key.replace(' Rank', ''));
+        }
+      });
+    });
+    return Array.from(scoutNames);
+  }
 }
 
 // Export a singleton instance

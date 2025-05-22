@@ -1,10 +1,12 @@
-import { ThemeProvider, createTheme, CssBaseline, Container, Typography, Box, AppBar, Toolbar, Button } from '@mui/material';
-import { Routes, Route, Link } from 'react-router-dom';
+import { ThemeProvider, createTheme, CssBaseline, Box, } from '@mui/material';
+import { Routes, Route } from 'react-router-dom';
 import PlayerCarousel from './components/PlayerCarousel';
 import BigBoard from './features/draft-board/BigBoard';
 import AdminDashboard from './pages/AdminDashboard';
 import ProfilesPage from './pages/ProfilesPage';
 import PlayerProfile from './pages/PlayerProfile';
+import NavBar from './components/NavBar';
+import Hero from './components/Hero';
 
 const theme = createTheme({
   palette: {
@@ -19,7 +21,7 @@ const theme = createTheme({
       contrastText: '#B8C4CA', // Silver/Gray
     },
     background: {
-      default: '#F4F6F8', // Light background for modern look
+      default: '#0C1E35', // Dark Blue
       paper: '#FFFFFF',
     },
     text: {
@@ -44,12 +46,7 @@ const theme = createTheme({
 function Home() {
   return (
     <Box sx={{ my: 4 }}>
-      <Typography variant="h2" component="h1" gutterBottom align="center" color="primary.main">
-        NextGen
-      </Typography>
-      <Typography variant="h5" component="h2" gutterBottom align="center" color="secondary.main">
-        The Next Generation of Basketball Superstars
-      </Typography>
+      <Hero />
       <PlayerCarousel />
     </Box>
   );
@@ -59,29 +56,24 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <AppBar position="static" color="primary">
-        <Toolbar>
-          <img
-            src="/assets/logos/logo.png"
-            alt="NextGen Logo"
-            style={{ height: 40, marginRight: 16, borderRadius: 8, background: '#fff' }}
-          />
-          <Button color="inherit" component={Link} to="/">Home</Button>
-          <Button color="inherit" component={Link} to="/draft-board">Draft Board</Button>
-          <Button color="inherit" component={Link} to="/profiles">Profiles</Button>
-        </Toolbar>
-      </AppBar>
-      <Container maxWidth="xl">
+      <Box
+        sx={{
+          minHeight: '100vh',
+          width: '100%',
+          overflow: 'hidden',
+          position: 'relative',
+          backgroundColor: 'background.default'
+        }}
+      >
+        <NavBar />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/draft-board" element={<BigBoard />} />
-          
           <Route path="/admin" element={<AdminDashboard />} />
-          
           <Route path="/profiles" element={<ProfilesPage />} />
           <Route path="/profiles/:playerId" element={<PlayerProfile />} />
         </Routes>
-      </Container>
+      </Box>
     </ThemeProvider>
   );
 }

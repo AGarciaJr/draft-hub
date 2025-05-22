@@ -17,7 +17,7 @@ const ScoutingReportList: React.FC<ScoutingReportListProps> = ({ reports }) => {
   if (sortedReports.length === 0) {
     return (
       <Box sx={{ mt: 2 }}>
-        <Typography variant="body1" color="text.secondary">
+        <Typography variant="body1" color="#ffff">
           No scouting reports available for this player.
         </Typography>
       </Box>

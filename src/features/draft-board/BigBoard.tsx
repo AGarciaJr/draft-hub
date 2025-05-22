@@ -171,34 +171,36 @@ const BigBoard: React.FC = () => {
 
   return (
     <Box sx={{ px: 2, py: 4 }}>
-      <Typography variant="h4" component="h1" gutterBottom>
+      <Typography variant="h4" component="h1" gutterBottom sx={{ color: '#fff' }}>
         NextGen Draft Board
       </Typography>
 
       {/* Sorting and Filtering Controls */}
       <Box sx={{ mb: 3, display: 'flex', alignItems: 'center', gap: 2 }}>
         <FormControl size="small" sx={{ width: 200 }}>
-          <InputLabel id="sort-by-label">Sort By</InputLabel>
+          <InputLabel id="sort-by-label" sx={{ color: '#fff' }}>Sort By</InputLabel>
           <Select
             labelId="sort-by-label"
             value={sortBy}
             label="Sort By"
             onChange={(e) => setSortBy(e.target.value as 'avgRank' | string)}
+            sx={{ color: '#fff', '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255, 255, 255, 0.3)' } }}
           >
             <MenuItem value="avgRank">Average Rank</MenuItem>
             {scoutNames.map(scoutName => (
-            <MenuItem key={scoutName} value={scoutName}>{scoutName}</MenuItem>
+              <MenuItem key={scoutName} value={scoutName}>{scoutName}</MenuItem>
             ))}
           </Select>
         </FormControl>
 
         <FormControl size="small" sx={{ width: 200 }}>
-          <InputLabel id="reports-by-label">Reports By</InputLabel>
+          <InputLabel id="reports-by-label" sx={{ color: '#fff' }}>Reports By</InputLabel>
           <Select
             labelId="reports-by-label"
             value={selectedScout}
             label="Reports By"
             onChange={(e) => setSelectedScout(e.target.value)}
+            sx={{ color: '#fff', '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255, 255, 255, 0.3)' } }}
           >
             <MenuItem value="allScouts">All Scouts</MenuItem>
             {availableScouts.map(scout => (
@@ -209,7 +211,7 @@ const BigBoard: React.FC = () => {
 
       </Box>
 
-      <Box sx={{ display: 'grid', gap: 4 }}>
+      <Box sx={{ display: 'grid', gap: 4, maxWidth: '1200px', margin: '0 auto' }}>
       {sortedPlayers.map((player, idx) => {
   const ranking = getPlayerScoutRanking(player.playerId);
   const scoutNames = ranking ? Object.keys(ranking).filter(key => key !== 'playerId') : [];
@@ -281,11 +283,11 @@ const BigBoard: React.FC = () => {
       {/* Main Content: Player Image/Info and Summary/Comparisons/Attributes */}
       <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, bgcolor: 'white', p: 4, gap: 4 }}>
         {/* Left: Image + Info */}
-        <Box sx={{ width: { xs: '100%', md: 380 }, mb: 2, textAlign: 'center' }}>
+        <Box sx={{ width: { xs: '100%', md: 320 }, mb: 2, textAlign: 'center' }}>
           <Box
             sx={{
               width: '100%',
-              height: 380,
+              height: 320,
               background: '#f3f3f3',
               borderRadius: 2,
               overflow: 'hidden',
