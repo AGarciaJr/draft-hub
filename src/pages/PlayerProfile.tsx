@@ -5,7 +5,7 @@ import { Box, Typography, Paper, Container, Divider } from '@mui/material';
 import ScoutingReportForm from '../components/ScoutingReportForm';
 import ScoutingReportList from '../components/ScoutingReportList';
 import type { ScoutingReport } from '../types/player.types';
-import playerSummaries from '../data/player_summaries.json';
+import playerSummaries from '../data/player_summaries.json' with { type: 'json' };
 
 const PlayerProfile: React.FC = () => {
   const { playerId } = useParams();

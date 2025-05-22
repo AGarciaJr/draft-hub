@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { playerDataService } from '../services/playerDataService';
 import { Box, Typography, TextField, Paper, Checkbox, FormControlLabel, Select, MenuItem, Button, Divider, Accordion, AccordionSummary, AccordionDetails, Container, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Stack } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import rawData from '../data/intern_project_data.json'; // Import raw JSON data
+import rawData from '../data/intern_project_data.json' with { type: 'json' }; // Import raw JSON data
 
 // Add ScoutRanking interface
 interface ScoutRanking {

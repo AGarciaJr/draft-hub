@@ -6,8 +6,8 @@ import type { PlayerBio as BasePlayerBio } from '../../types/player.types';
 import { playerBios as rawPlayerBios } from '../../data';
 import StarIcon from '@mui/icons-material/Star';
 import { playerDataService } from '../../services/playerDataService';
-import playerClassesPositionsData from '../../data/player_classes_positions.json';
-import schoolColorsLogos from '../../data/school_colors_logos.json';
+import playerClassesPositionsData from '../../data/player_classes_positions.json' with { type: 'json' };
+import schoolColorsLogos from '../../data/school_colors_logos.json' with { type: 'json' };
 
 // Helper function to get player class and position
 const getPlayerClassAndPosition = (playerName: string) => {
@@ -142,7 +142,7 @@ const BigBoard: React.FC = () => {
         return rankDataB.count - rankDataA.count;
       } else {
         // Sort by a specific scout rank (we already filtered out players without this rank)
-        // Use type assertion here assuming rankingA and rankingB are ScoutRanking
+        // Use type withion here assuming rankingA and rankingB are ScoutRanking
         const rankA = Number((rankingA as ScoutRanking)[sortBy]);
         const rankB = Number((rankingB as ScoutRanking)[sortBy]);
 
