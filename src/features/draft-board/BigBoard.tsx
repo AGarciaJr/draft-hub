@@ -1,16 +1,28 @@
 import React, { useState, useMemo } from 'react';
-import { Box, Typography, Paper, Chip, Select, MenuItem, FormControl, InputLabel, Link as MuiLink, Collapse, Button } from '@mui/material';
+import { Box, Typography, Paper, Chip, Select, MenuItem, FormControl, InputLabel, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { scoutRankings, playerSummaries } from '../../data';
 import type { PlayerBio as BasePlayerBio } from '../../types/player.types';
 import { playerBios as rawPlayerBios } from '../../data';
 import StarIcon from '@mui/icons-material/Star';
 import { playerDataService } from '../../services/playerDataService';
+import playerClassesPositionsData from '../../data/player_classes_positions.json';
+import schoolColorsLogos from '../../data/school_colors_logos.json';
+
+// Helper function to get player class and position
+const getPlayerClassAndPosition = (playerName: string) => {
+  const playerData = playerClassesPositionsData.players.find(p => p.name === playerName);
+  return {
+    class: playerData?.class || null,
+    position: playerData?.position || null
+  };
+};
 
 // Extend the base PlayerBio with additional properties
 interface PlayerBio extends BasePlayerBio {
   class?: string;
   age?: number;
+  position?: string;
 }
 
 // Type the playerBios
@@ -217,44 +229,63 @@ const BigBoard: React.FC = () => {
     return !isNaN(rank) && rank > playerAvgRank * 1.2;
   };
 
+  // Get school info
+  const schoolInfo = player.currentTeam && schoolColorsLogos.schools[player.currentTeam as keyof typeof schoolColorsLogos.schools];
+  const schoolColor = (schoolInfo && typeof schoolInfo === 'object' && 'colors' in schoolInfo) ? schoolInfo.colors.primary : '#00538C';
+  const schoolLogo = (schoolInfo && typeof schoolInfo === 'object' && 'logo' in schoolInfo) ? `/assets/logos/${schoolInfo.logo}` : '';
+
+
   return (
     <Paper key={player.playerId} elevation={3} sx={{ borderRadius: 3, overflow: 'hidden', mb: 4, color: '#000' }}>
       {/* Header Bar */}
       <Box
         sx={{
-          bgcolor: '#e0e7ff',
+          bgcolor: schoolColor,
           px: 3,
           py: 2,
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'space-between',
           borderBottom: '1px solid #ccc',
         }}
       >
+        {/* School Logo and Player Info */}
+        <Box sx={{ display: 'flex', alignItems: 'center', flex: 1, gap: 2 }}>
+          <Box
+            component="img"
+            src={schoolLogo || '/assets/logos/logo.png'}
+            alt={player.currentTeam}
+            onError={e => { e.currentTarget.src = '/assets/logos/logo.png'; }}
+            sx={{ height: 36, width: 36, mr: 2, borderRadius: 1, bgcolor: '#fff', p: 0.5 }}
+          />
+          <Typography variant="h5" sx={{ fontWeight: 700, color: '#fff', display: 'flex', alignItems: 'center', gap: 1 }}>
+            {player.name}
+            <Typography
+              component="span"
+              sx={{ fontSize: '1.1rem', fontWeight: 400, color: '#fff', ml: 2 }}
+            >
+              {(() => {
+                const { position } = getPlayerClassAndPosition(player.name);
+                return position ? `${position}` : '';
+              })()} {player.currentTeam ? `• ${player.currentTeam}` : ''}
+            </Typography>
+          </Typography>
+        </Box>
+        {/* Rank Chip */}
         <Chip
           label={`Rank ${idx + 1}`}
           color="primary"
-          sx={{ fontWeight: 700, fontSize: '1rem' }}
+          sx={{ fontWeight: 700, fontSize: '1rem', bgcolor: '#fff', color: schoolColor, ml: 2 }}
         />
-        <Typography variant="h5" sx={{ fontWeight: 700 }}>
-          {player.name}
-          <Typography
-            component="span"
-            sx={{ fontSize: '1.1rem', fontWeight: 400, color: '#333', ml: 1 }}
-          >
-            {player.position ? `• ${player.position}` : ''} {player.currentTeam ? `• ${player.currentTeam}` : ''}
-          </Typography>
-        </Typography>
       </Box>
 
-      {/* Main Content */}
+      {/* Main Content: Player Image/Info and Summary/Comparisons/Attributes */}
       <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, bgcolor: 'white', p: 4, gap: 4 }}>
         {/* Left: Image + Info */}
         <Box sx={{ width: { xs: '100%', md: 380 }, mb: 2, textAlign: 'center' }}>
           <Box
             sx={{
               width: '100%',
-              height: 260,
+              height: 380,
               background: '#f3f3f3',
               borderRadius: 2,
               overflow: 'hidden',
@@ -300,7 +331,7 @@ const BigBoard: React.FC = () => {
                 transition: 'opacity 0.2s',
                 fontSize: 24,
                 fontWeight: 600,
-                pointerEvents: 'none', // So the click still goes to the parent
+                pointerEvents: 'none',
                 zIndex: 2,
                 userSelect: 'none',
                 '.MuiBox-root:hover > &': {
@@ -311,6 +342,7 @@ const BigBoard: React.FC = () => {
               View Profile
             </Box>
           </Box>
+          {/* Player Info Row */}
           <Box sx={{ display: 'flex', justifyContent: 'center', gap: 6, width: '100%', mt: 2 }}>
             <Box>
               <Typography variant="h6" sx={{ fontWeight: 700 }}>{getHeightString(player.height)}</Typography>
@@ -320,12 +352,15 @@ const BigBoard: React.FC = () => {
               <Typography variant="h6" sx={{ fontWeight: 700 }}>{player.weight}</Typography>
               <Typography variant="body2" color="text.secondary">Weight</Typography>
             </Box>
-            {player.class && (
-              <Box>
-                <Typography variant="h6" sx={{ fontWeight: 700 }}>{player.class}</Typography>
-                <Typography variant="body2" color="text.secondary">Class</Typography>
-              </Box>
-            )}
+            {(() => {
+              const { class: playerClass } = getPlayerClassAndPosition(player.name);
+              return playerClass ? (
+                <Box>
+                  <Typography variant="h6" sx={{ fontWeight: 700 }}>{playerClass}</Typography>
+                  <Typography variant="body2" color="text.secondary">Class</Typography>
+                </Box>
+              ) : null;
+            })()}
             {player.birthDate && (
               <Box>
                 <Typography variant="h6" sx={{ fontWeight: 700 }}>{getAgeFromBirthDate(player.birthDate)}</Typography>
