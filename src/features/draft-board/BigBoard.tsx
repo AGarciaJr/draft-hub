@@ -211,7 +211,7 @@ const BigBoard: React.FC = () => {
 
       </Box>
 
-      <Box sx={{ display: 'grid', gap: 4 }}>
+      <Box sx={{ display: 'grid', gap: 4, maxWidth: '1200px', margin: '0 auto' }}>
       {sortedPlayers.map((player, idx) => {
   const ranking = getPlayerScoutRanking(player.playerId);
   const scoutNames = ranking ? Object.keys(ranking).filter(key => key !== 'playerId') : [];
@@ -283,11 +283,11 @@ const BigBoard: React.FC = () => {
       {/* Main Content: Player Image/Info and Summary/Comparisons/Attributes */}
       <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, bgcolor: 'white', p: 4, gap: 4 }}>
         {/* Left: Image + Info */}
-        <Box sx={{ width: { xs: '100%', md: 380 }, mb: 2, textAlign: 'center' }}>
+        <Box sx={{ width: { xs: '100%', md: 320 }, mb: 2, textAlign: 'center' }}>
           <Box
             sx={{
               width: '100%',
-              height: 380,
+              height: 320,
               background: '#f3f3f3',
               borderRadius: 2,
               overflow: 'hidden',
