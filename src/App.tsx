@@ -22,7 +22,7 @@ const theme = createTheme({
       contrastText: '#B8C4CA', // Silver/Gray
     },
     background: {
-      default: '#F4F6F8', // Light background for modern look
+      default: '#0C1E35', // Dark Blue
       paper: '#FFFFFF',
     },
     text: {

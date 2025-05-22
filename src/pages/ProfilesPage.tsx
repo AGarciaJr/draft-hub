@@ -22,7 +22,7 @@ const ProfilesPage: React.FC = () => {
 
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
-      <Typography variant="h3" component="h1" gutterBottom align="center" sx={{ mb: 4 }}>
+      <Typography variant="h3" component="h1" gutterBottom align="center" sx={{ mb: 4, color: '#fff' }}>
         Player Profiles
       </Typography>
       

@@ -8,7 +8,7 @@ const Hero: React.FC = () => {
         width: '100%',
         height: '60vh',
         backgroundImage: 'url(/assets/logo-transparent-svg.svg)',
-        backgroundSize: 'cover',
+        backgroundSize: 'contain',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
         mb: 4,

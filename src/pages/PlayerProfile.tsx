@@ -192,7 +192,7 @@ const PlayerProfile: React.FC = () => {
 
       {/* Scouting Report Section */}
       <Box mt={6}>
-        <Typography variant="h5" gutterBottom>
+        <Typography variant="h5" gutterBottom color="#fff">
           Scouting Reports
         </Typography>
 
