@@ -1,0 +1,602 @@
+[
+  {
+    "name": "Cooper Flagg",
+    "playerId": 170531,
+    "position": "Unknown",
+    "class": "Unknown",
+    "school": "Duke",
+    "height": 81,
+    "weight": 209,
+    "nationality": "USA"
+  },
+  {
+    "name": "Dylan Harper",
+    "playerId": 161608,
+    "position": "Unknown",
+    "class": "Unknown",
+    "school": "Rutgers",
+    "height": 78,
+    "weight": 215,
+    "nationality": "USA"
+  },
+  {
+    "name": "Ace Bailey",
+    "playerId": 161710,
+    "position": "Unknown",
+    "class": "Unknown",
+    "school": "Rutgers",
+    "height": 82,
+    "weight": 210,
+    "nationality": "USA"
+  },
+  {
+    "name": "VJ Edgecombe",
+    "playerId": 181834,
+    "position": "Unknown",
+    "class": "Unknown",
+    "school": "Baylor",
+    "height": 77,
+    "weight": 188,
+    "nationality": "Bahamas"
+  },
+  {
+    "name": "Kasparas Jakucionis",
+    "playerId": 140378,
+    "position": "Unknown",
+    "class": "Unknown",
+    "school": "Illinois",
+    "height": 78,
+    "weight": 205,
+    "nationality": "Lithuania"
+  },
+  {
+    "name": "Kon Knueppel",
+    "playerId": 161852,
+    "position": "Unknown",
+    "class": "Unknown",
+    "school": "Duke",
+    "height": 79,
+    "weight": 210,
+    "nationality": "USA"
+  },
+  {
+    "name": "Khaman Maluach",
+    "playerId": 164614,
+    "position": "Unknown",
+    "class": "Unknown",
+    "school": "Duke",
+    "height": 86,
+    "weight": 250,
+    "nationality": "South Sudan"
+  },
+  {
+    "name": "Egor Demin",
+    "playerId": 138145,
+    "position": "Unknown",
+    "class": "Unknown",
+    "school": "BYU",
+    "height": 81,
+    "weight": 202,
+    "nationality": "Russia"
+  },
+  {
+    "name": "Jeremiah Fears",
+    "playerId": 183971,
+    "position": "Unknown",
+    "class": "Unknown",
+    "school": "Oklahoma",
+    "height": 76,
+    "weight": 182,
+    "nationality": "USA"
+  },
+  {
+    "name": "Derik Queen",
+    "playerId": 158352,
+    "position": "Unknown",
+    "class": "Unknown",
+    "school": "Maryland",
+    "height": 82,
+    "weight": 246,
+    "nationality": "USA"
+  },
+  {
+    "name": "Tre Johnson",
+    "playerId": 162155,
+    "position": "Unknown",
+    "class": "Unknown",
+    "school": "Texas",
+    "height": 78,
+    "weight": 190,
+    "nationality": "USA"
+  },
+  {
+    "name": "Joan Beringer",
+    "playerId": 182192,
+    "position": "Unknown",
+    "class": "Unknown",
+    "school": "Cedevita Olimpija",
+    "height": 83,
+    "weight": 236,
+    "nationality": "France"
+  },
+  {
+    "name": "Nolan Traore",
+    "playerId": 141122,
+    "position": "Unknown",
+    "class": "Unknown",
+    "school": "Saint Quentin",
+    "height": 77,
+    "weight": 184,
+    "nationality": "France"
+  },
+  {
+    "name": "Liam McNeeley",
+    "playerId": 159895,
+    "position": "Unknown",
+    "class": "Unknown",
+    "school": "Connecticut",
+    "height": 79,
+    "weight": 209,
+    "nationality": "USA"
+  },
+  {
+    "name": "Hugo Gonzalez",
+    "playerId": 141473,
+    "position": "Unknown",
+    "class": "Unknown",
+    "school": "Real Madrid",
+    "height": 79,
+    "weight": 190,
+    "nationality": "Spain"
+  },
+  {
+    "name": "Danny Wolf",
+    "playerId": 153927,
+    "position": "Unknown",
+    "class": "Unknown",
+    "school": "Michigan",
+    "height": 84,
+    "weight": 255,
+    "nationality": "Israel"
+  },
+  {
+    "name": "Ben Saraf",
+    "playerId": 162876,
+    "position": "Unknown",
+    "class": "Unknown",
+    "school": "Ratiopharm Ulm",
+    "height": 78,
+    "weight": 202,
+    "nationality": "Israel"
+  },
+  {
+    "name": "Collin Murray-Boyles",
+    "playerId": 171552,
+    "position": "Unknown",
+    "class": "Unknown",
+    "school": "South Carolina",
+    "height": 80,
+    "weight": 245,
+    "nationality": "USA"
+  },
+  {
+    "name": "Noa Essengue",
+    "playerId": 141110,
+    "position": "Unknown",
+    "class": "Unknown",
+    "school": "Ratiopharm Ulm",
+    "height": 82,
+    "weight": 198,
+    "nationality": "France"
+  },
+  {
+    "name": "Will Riley",
+    "playerId": 161919,
+    "position": "Unknown",
+    "class": "Unknown",
+    "school": "Illinois",
+    "height": 80,
+    "weight": 195,
+    "nationality": "Canada"
+  },
+  {
+    "name": "Asa Newell",
+    "playerId": 171542,
+    "position": "Unknown",
+    "class": "Unknown",
+    "school": "Georgia",
+    "height": 83,
+    "weight": 220,
+    "nationality": "USA"
+  },
+  {
+    "name": "Drake Powell",
+    "playerId": 171436,
+    "position": "Unknown",
+    "class": "Unknown",
+    "school": "North Carolina",
+    "height": 78,
+    "weight": 193,
+    "nationality": "USA"
+  },
+  {
+    "name": "Carter Bryant",
+    "playerId": 169666,
+    "position": "Unknown",
+    "class": "Unknown",
+    "school": "Arizona",
+    "height": 80,
+    "weight": 220,
+    "nationality": "USA"
+  },
+  {
+    "name": "Thomas Sorber",
+    "playerId": 154835,
+    "position": "Unknown",
+    "class": "Unknown",
+    "school": "Georgetown",
+    "height": 82,
+    "weight": 255,
+    "nationality": "USA"
+  },
+  {
+    "name": "Adou Thiero",
+    "playerId": 172132,
+    "position": "Unknown",
+    "class": "Unknown",
+    "school": "Arkansas",
+    "height": 80,
+    "weight": 220,
+    "nationality": "Mali"
+  },
+  {
+    "name": "Alex Condon",
+    "playerId": 159033,
+    "position": "Unknown",
+    "class": "Unknown",
+    "school": "Florida",
+    "height": 83,
+    "weight": 230,
+    "nationality": "Australia"
+  },
+  {
+    "name": "Noah Penda",
+    "playerId": 130696,
+    "position": "Unknown",
+    "class": "Unknown",
+    "school": "Le Mans",
+    "height": 80,
+    "weight": 245,
+    "nationality": "France"
+  },
+  {
+    "name": "Rasheer Fleming",
+    "playerId": 161180,
+    "position": "Unknown",
+    "class": "Unknown",
+    "school": "Saint Joseph's",
+    "height": 81,
+    "weight": 240,
+    "nationality": "USA"
+  },
+  {
+    "name": "Alex Karaban",
+    "playerId": 144830,
+    "position": "Unknown",
+    "class": "Unknown",
+    "school": "Connecticut",
+    "height": 80,
+    "weight": 219,
+    "nationality": "USA"
+  },
+  {
+    "name": "Jase Richardson",
+    "playerId": 161742,
+    "position": "Unknown",
+    "class": "Unknown",
+    "school": "Michigan St",
+    "height": 75,
+    "weight": 185,
+    "nationality": "USA"
+  },
+  {
+    "name": "Ryan Kalkbrenner",
+    "playerId": 124543,
+    "position": "Unknown",
+    "class": "Unknown",
+    "school": "Creighton",
+    "height": 86,
+    "weight": 252,
+    "nationality": "USA"
+  },
+  {
+    "name": "Michael Ruzic",
+    "playerId": 141197,
+    "position": "Unknown",
+    "class": "Unknown",
+    "school": "Joventut",
+    "height": 82,
+    "weight": 223,
+    "nationality": "Croatia"
+  },
+  {
+    "name": "Ian Jackson",
+    "playerId": 159744,
+    "position": "Unknown",
+    "class": "Unknown",
+    "school": "North Carolina",
+    "height": 76,
+    "weight": 190,
+    "nationality": "USA"
+  },
+  {
+    "name": "Sergio De Larrea",
+    "playerId": 136466,
+    "position": "Unknown",
+    "class": "Unknown",
+    "school": "Valencia",
+    "height": 79,
+    "weight": 189,
+    "nationality": "Spain"
+  },
+  {
+    "name": "Maxime Raynaud",
+    "playerId": 123733,
+    "position": "Unknown",
+    "class": "Unknown",
+    "school": "Stanford",
+    "height": 85,
+    "weight": 235,
+    "nationality": "France"
+  },
+  {
+    "name": "Alex Toohey",
+    "playerId": 129665,
+    "position": "Unknown",
+    "class": "Unknown",
+    "school": "Sydney",
+    "height": 80,
+    "weight": 223,
+    "nationality": "Australia"
+  },
+  {
+    "name": "Boogie Fland",
+    "playerId": 159898,
+    "position": "Unknown",
+    "class": "Unknown",
+    "school": "Arkansas",
+    "height": 74,
+    "weight": 174,
+    "nationality": "USA"
+  },
+  {
+    "name": "Miles Byrd",
+    "playerId": 155302,
+    "position": "Unknown",
+    "class": "Unknown",
+    "school": "San Diego St",
+    "height": 79,
+    "weight": 190,
+    "nationality": "USA"
+  },
+  {
+    "name": "Chaz Lanier",
+    "playerId": 157395,
+    "position": "Unknown",
+    "class": "Unknown",
+    "school": "Tennessee",
+    "height": 77,
+    "weight": 196,
+    "nationality": "USA"
+  },
+  {
+    "name": "Tyrese Proctor",
+    "playerId": 129693,
+    "position": "Unknown",
+    "class": "Unknown",
+    "school": "Duke",
+    "height": 78,
+    "weight": 183,
+    "nationality": "Australia"
+  },
+  {
+    "name": "Johni Broome",
+    "playerId": 139482,
+    "position": "Unknown",
+    "class": "Unknown",
+    "school": "Auburn",
+    "height": 82,
+    "weight": 247,
+    "nationality": "USA"
+  },
+  {
+    "name": "Dink Pate",
+    "playerId": 164509,
+    "position": "Unknown",
+    "class": "Unknown",
+    "school": "Mexico City",
+    "height": 80,
+    "weight": 187,
+    "nationality": "USA"
+  },
+  {
+    "name": "Darrion Williams",
+    "playerId": 155317,
+    "position": "Unknown",
+    "class": "Unknown",
+    "school": "Texas Tech",
+    "height": 78,
+    "weight": 225,
+    "nationality": "USA"
+  },
+  {
+    "name": "Eric Dixon",
+    "playerId": 99451,
+    "position": "Unknown",
+    "class": "Unknown",
+    "school": "Villanova",
+    "height": 80,
+    "weight": 269,
+    "nationality": "USA"
+  },
+  {
+    "name": "Kam Jones",
+    "playerId": 149244,
+    "position": "Unknown",
+    "class": "Unknown",
+    "school": "Marquette",
+    "height": 76,
+    "weight": 205,
+    "nationality": "USA"
+  },
+  {
+    "name": "Sion James",
+    "playerId": 139181,
+    "position": "Unknown",
+    "class": "Unknown",
+    "school": "Duke",
+    "height": 78,
+    "weight": 220,
+    "nationality": "USA"
+  },
+  {
+    "name": "Johann Grunloh",
+    "playerId": 148503,
+    "position": "Unknown",
+    "class": "Unknown",
+    "school": "Vechta",
+    "height": 83,
+    "weight": 234,
+    "nationality": "Germany"
+  },
+  {
+    "name": "Joseph Tugler",
+    "playerId": 170920,
+    "position": "Unknown",
+    "class": "Unknown",
+    "school": "Houston",
+    "height": 80,
+    "weight": 230,
+    "nationality": "USA"
+  },
+  {
+    "name": "Nique Clifford",
+    "playerId": 144537,
+    "position": "Unknown",
+    "class": "Unknown",
+    "school": "Colorado St",
+    "height": 78,
+    "weight": 199,
+    "nationality": "USA"
+  },
+  {
+    "name": "Isaiah Evans",
+    "playerId": 161559,
+    "position": "Unknown",
+    "class": "Unknown",
+    "school": "Duke",
+    "height": 78,
+    "weight": 180,
+    "nationality": "USA"
+  },
+  {
+    "name": "Rocco Zikarsky",
+    "playerId": 164825,
+    "position": "Unknown",
+    "class": "Unknown",
+    "school": "Brisbane",
+    "height": 87,
+    "weight": 227,
+    "nationality": "Australia"
+  },
+  {
+    "name": "Bogoljub Markovic",
+    "playerId": 159976,
+    "position": "Unknown",
+    "class": "Unknown",
+    "school": "Mega Superbet",
+    "height": 84,
+    "weight": 216,
+    "nationality": "Serbia"
+  },
+  {
+    "name": "Mouhamed Faye",
+    "playerId": 172020,
+    "position": "Unknown",
+    "class": "Unknown",
+    "school": "Reggio Emilia",
+    "height": 83,
+    "weight": 228,
+    "nationality": "Senegal"
+  },
+  {
+    "name": "Cedric Coward",
+    "playerId": 179629,
+    "position": "Unknown",
+    "class": "Unknown",
+    "school": "Washington St",
+    "height": 78,
+    "weight": 206,
+    "nationality": "USA"
+  },
+  {
+    "name": "Yaxel Lendeborg",
+    "playerId": 193314,
+    "position": "Unknown",
+    "class": "Unknown",
+    "school": "UAB",
+    "height": 81,
+    "weight": 230,
+    "nationality": "Dominican Republic"
+  },
+  {
+    "name": "Zvonimir Ivisic",
+    "playerId": 118028,
+    "position": "Unknown",
+    "class": "Unknown",
+    "school": "Arkansas",
+    "height": 86,
+    "weight": 220,
+    "nationality": "Croatia"
+  },
+  {
+    "name": "JT Toppin",
+    "playerId": 164505,
+    "position": "Unknown",
+    "class": "Unknown",
+    "school": "Texas Tech",
+    "height": 80,
+    "weight": 221,
+    "nationality": "USA"
+  },
+  {
+    "name": "Koby Brea",
+    "playerId": 140078,
+    "position": "Unknown",
+    "class": "Unknown",
+    "school": "Kentucky",
+    "height": 79,
+    "weight": 215,
+    "nationality": "Dominican Republic"
+  },
+  {
+    "name": "Malique Lewis",
+    "playerId": 167838,
+    "position": "Unknown",
+    "class": "Unknown",
+    "school": "South East Melbourne",
+    "height": 80,
+    "weight": 209,
+    "nationality": "Trinidad and Tobago"
+  },
+  {
+    "name": "Hunter Sallis",
+    "playerId": 142035,
+    "position": "Unknown",
+    "class": "Unknown",
+    "school": "Wake Forest",
+    "height": 77,
+    "weight": 179,
+    "nationality": "USA"
+  }
+]
