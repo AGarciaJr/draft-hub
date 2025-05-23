@@ -27,13 +27,13 @@ interface GameLog {
   timePlayed: string;
   fgm: number;
   fga: number;
-  'fg%': number;
+  fgPct: number;
   tpm: number;
   tpa: number;
-  'tp%': number;
+  tpPct: number;
   ftm: number;
   fta: number;
-  'ft%': number;
+  ftPct: number;
   oreb: number;
   dreb: number;
   reb: number;
