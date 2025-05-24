@@ -17,6 +17,48 @@ export const homeTooltips: Step[] = [
   },
 ];
 
+export const draftBoardTooltips: Step[] = [
+  {
+    target: 'body',
+    content: 'Welcome to the Draft Board! Here you can view and analyze player rankings from various scouts.',
+    placement: 'center',
+    disableBeacon: true,
+  },
+  {
+    target: '.draft-board-controls',
+    content: 'Use these controls to filter and sort players by different criteria like position, school, and scout rankings.',
+    placement: 'bottom',
+    spotlightClicks: true,
+    disableBeacon: true,
+    spotlightPadding: 5,
+  },
+  {
+    target: '.player-card',
+    content: 'Click on any player card to expand and see detailed information about their rankings and statistics.',
+    placement: 'bottom',
+    spotlightClicks: true,
+    disableBeacon: true,
+    spotlightPadding: 5,
+  },
+];
+
+export const statsTooltips: Step[] = [
+  {
+    target: 'body',
+    content: 'Welcome to the Stats page! Here you can view statistical leaders across different categories.',
+    placement: 'center',
+    disableBeacon: true,
+  },
+  {
+    target: '.stat-card',
+    content: 'Each card shows the top performers in a specific statistical category. Hover over players to see more details.',
+    placement: 'bottom',
+    spotlightClicks: true,
+    disableBeacon: true,
+    spotlightPadding: 5,
+  },
+];
+
 export const profilesTooltips: Step[] = [
   {
     target: '.profiles-container',

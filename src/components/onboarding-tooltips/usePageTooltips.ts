@@ -5,9 +5,13 @@ import {
   profilesTooltips,
   playerProfileTooltips,
   adminDashboardTooltips,
+  draftBoardTooltips,
+  statsTooltips,
 } from './tooltipConfigs';
 
-export const usePageTooltips = (pageName: 'home' | 'profiles' | 'playerProfile' | 'adminDashboard') => {
+export const usePageTooltips = (
+  pageName: 'home' | 'profiles' | 'playerProfile' | 'adminDashboard' | 'draftBoard' | 'stats'
+) => {
   const { startTour } = useTooltip();
 
   useEffect(() => {
@@ -18,6 +22,8 @@ export const usePageTooltips = (pageName: 'home' | 'profiles' | 'playerProfile' 
       profiles: profilesTooltips,
       playerProfile: playerProfileTooltips,
       adminDashboard: adminDashboardTooltips,
+      draftBoard: draftBoardTooltips,
+      stats: statsTooltips,
     }[pageName];
 
     console.log('[usePageTooltips] Starting tour with steps:', {
