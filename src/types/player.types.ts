@@ -117,6 +117,8 @@ export interface SeasonLog {
   TOV: number;
   PF: number;
   PTS: number;
+  '3PM': number;
+  FT: number;
 }
 
 export interface ScoutingReport {
