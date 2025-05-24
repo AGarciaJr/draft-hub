@@ -2,7 +2,7 @@ import React from 'react';
 import { AppBar, Toolbar, Button, IconButton, Tooltip } from '@mui/material';
 import { Link } from 'react-router-dom';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
-import { useTooltip } from '../onboarding-tooltips/TooltipProvider';
+import { useTooltip } from '../onboarding-tooltips/tooltipContext';
 
 const NavBar: React.FC = () => {
   const { isTooltipEnabled, toggleTooltips } = useTooltip();

@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useTooltip } from './TooltipProvider';
+import { useTooltip } from './tooltipContext';
 import {
   homeTooltips,
   profilesTooltips,
