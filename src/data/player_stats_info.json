@@ -1,0 +1,359 @@
+[
+  {
+    "playerName": "Cooper Flagg",
+    "position": "Forward",
+    "analysis": {
+      "stat1": {
+        "stat": "Points Per Game",
+        "value": "18.2",
+        "explanation": "As a Forward, Cooper's high points per game average highlights his ability to score efficiently and create scoring opportunities for teammates."
+      },
+      "stat2": {
+        "stat": "Rebounds Per Game",
+        "value": "7.0",
+        "explanation": "Cooper's rebounding prowess allows him to control the paint, secure key rebounds, and limit opponents' second-chance scoring opportunities."
+      },
+      "stat3": {
+        "stat": "Field Goal Percentage",
+        "value": "46.6",
+        "explanation": "With a high field goal percentage, Cooper demonstrates his ability to consistently score from within the paint and mid-range areas, making him a reliable threat on offense."
+      }
+    }
+  },
+  {
+    "playerName": "Dylan Harper",
+    "position": "Guard",
+    "analysis": {
+      "stat1": {
+        "stat": "Points Per Game",
+        "value": "21.0",
+        "explanation": "A Guard's ability to score efficiently is crucial, as it allows them to create opportunities for themselves and teammates. Dylan Harper's 21.0 points per game demonstrate his capacity to be a primary scoring option."
+      },
+      "stat2": {
+        "stat": "Rebounds Per Game",
+        "value": "4.1",
+        "explanation": "Guards often struggle with rebounding, but Dylan Harper's 4.1 rebounds per game show that he is committed to grabbing crucial boards and limiting opponents' second-chance opportunities."
+      },
+      "stat3": {
+        "stat": "Field Goal Percentage",
+        "value": "47.6",
+        "explanation": "Dylan Harper's 47.6 field goal percentage indicates his ability to make smart decisions on the court, often choosing the right shot and limiting turnovers. This efficiency allows him to contribute to team success while also keeping opponents guessing."
+      }
+    }
+  },
+  {
+    "playerName": "Ace Bailey",
+    "position": "Forward",
+    "analysis": {
+      "stat1": {
+        "stat": "Points Per Game",
+        "value": "12.3",
+        "explanation": "As a Forward, Ace Bailey's points per game is crucial in scoring goals and helping his team win games."
+      },
+      "stat2": {
+        "stat": "Rebounds Per Game",
+        "value": "6.0",
+        "explanation": "Ace Bailey's rebounds per game allow him to secure possession of the ball and maintain control of the game, making it easier for his teammates to create scoring opportunities."
+      },
+      "stat3": {
+        "stat": "Field Goal Percentage",
+        "value": "43.9",
+        "explanation": "A high field goal percentage indicates Ace Bailey's ability to consistently score from within and from outside, making him a threat on the court and allowing his teammates to create space and opportunities."
+      }
+    }
+  },
+  {
+    "playerName": "Tre Johnson",
+    "position": "Guard",
+    "analysis": {
+      "stat1": {
+        "stat": "Points Per Game",
+        "value": "21.5",
+        "explanation": "Tre's ability to score efficiently is crucial for his team, as he often takes on a scoring role off the bench."
+      },
+      "stat2": {
+        "stat": "Rebounds Per Game",
+        "value": "3.6",
+        "explanation": "As a Guard, Tre's rebounding numbers are impressive considering his size and position, allowing him to create additional possessions for his team."
+      },
+      "stat3": {
+        "stat": "Field Goal Percentage",
+        "value": "40.2",
+        "explanation": "Tre's field goal percentage is impressive, especially considering he often shoots with a high level of difficulty, making him a threat from anywhere on the court."
+      }
+    }
+  },
+  {
+    "playerName": "Kon Knueppel",
+    "position": "Wing",
+    "analysis": {
+      "stat1": {
+        "stat": "Points Per Game",
+        "value": "17.2",
+        "explanation": "A high points per game average is crucial for a Wing, as it indicates their ability to score efficiently and consistently, which can be particularly important in the modern game where pace and scoring are emphasized."
+      },
+      "stat2": {
+        "stat": "Rebounds Per Game",
+        "value": "4.4",
+        "explanation": "A decent rebounding rate for a Wing is vital, as it allows them to secure loose balls, limit opponents' second-chance opportunities, and also potentially create fast-break chances for their team."
+      },
+      "stat3": {
+        "stat": "Field Goal Percentage",
+        "value": "53.6",
+        "explanation": "A high field goal percentage is a key indicator of a Wing's shooting ability and efficiency, particularly when they're attacking the rim or taking open shots. This makes it crucial for creating scoring opportunities and maintaining possession."
+      }
+    }
+  },
+  {
+    "playerName": "VJ Edgecombe",
+    "position": "Wing",
+    "analysis": {
+      "stat1": {
+        "stat": "Points Per Game",
+        "value": "15.9",
+        "explanation": "A high points per game average indicates VJ's ability to consistently score from the wing position, making him a valuable asset for his team."
+      },
+      "stat2": {
+        "stat": "Rebounds Per Game",
+        "value": "6.4",
+        "explanation": "VJ's rebounding numbers demonstrate his effectiveness in securing defensive boards and creating second-chance opportunities for his teammates, which is crucial for a wing player."
+      },
+      "stat3": {
+        "stat": "Field Goal Percentage",
+        "value": "41.0",
+        "explanation": "A high field goal percentage suggests that VJ is able to efficiently score from the perimeter and around the basket, making him a reliable scoring option for his team."
+      }
+    }
+  },
+  {
+    "playerName": "Payton Sandfort",
+    "position": "Forward",
+    "analysis": {
+      "stat1": {
+        "stat": "Points Per Game",
+        "value": "0.0",
+        "explanation": "As a Forward, Payton's points per game indicate their ability to score effectively in the paint and from beyond the arc."
+      },
+      "stat2": {
+        "stat": "Rebounds Per Game",
+        "value": "0.0",
+        "explanation": "Payton's rebounds per game showcase their ability to secure important defensive possessions and limit opponents' second-chance opportunities."
+      },
+      "stat3": {
+        "stat": "Field Goal Percentage",
+        "value": "0.0",
+        "explanation": "Payton's field goal percentage demonstrates their efficiency in creating scoring opportunities, whether it be through post play or perimeter shooting."
+      }
+    }
+  },
+  {
+    "playerName": "Tyrese Proctor",
+    "position": "Guard",
+    "analysis": {
+      "stat1": {
+        "stat": "Points Per Game",
+        "value": "13.9",
+        "explanation": "As a Guard, Tyrese Proctor's ability to score efficiently is crucial for driving his team's offense. His points per game average of 13.9 indicates that he can capitalize on scoring opportunities."
+      },
+      "stat2": {
+        "stat": "Rebounds Per Game",
+        "value": "2.6",
+        "explanation": "While rebounds may not be the primary responsibility of a Guard, Tyrese Proctor's 2.6 rebounds per game demonstrate his ability to contribute on the glass and secure loose balls."
+      },
+      "stat3": {
+        "stat": "Field Goal Percentage",
+        "value": "49.0",
+        "explanation": "A high field goal percentage like Tyrese Proctor's 49.0% suggests that he has a consistent shooting touch, making him a reliable scoring option for his team."
+      }
+    }
+  },
+  {
+    "playerName": "Johni Broome",
+    "position": "Big",
+    "analysis": {
+      "stat1": {
+        "stat": "Points Per Game",
+        "value": "18.1",
+        "explanation": "A Big's ability to score efficiently is crucial, and Johni Broome's points per game average of 18.1 highlights his effectiveness in the paint."
+      },
+      "stat2": {
+        "stat": "Rebounds Per Game",
+        "value": "10.3",
+        "explanation": "As a Big, rebounding is essential to securing possession and limiting opponents' second-chance opportunities. Johni Broome's 10.3 rebounds per game demonstrates his commitment to this crucial aspect of the game."
+      },
+      "stat3": {
+        "stat": "Field Goal Percentage",
+        "value": "51.0",
+        "explanation": "A high field goal percentage indicates a player's ability to score efficiently, even in traffic. Johni Broome's 51.0% mark showcases his confidence and accuracy from within the paint."
+      }
+    }
+  },
+  {
+    "playerName": "Eric Dixon",
+    "position": "Forward",
+    "analysis": {
+      "stat1": {
+        "stat": "Points Per Game",
+        "value": "23.6",
+        "explanation": "As a Forward, Eric's impressive points per game average showcases his ability to score efficiently and effectively, making him a valuable asset on the court."
+      },
+      "stat2": {
+        "stat": "Rebounds Per Game",
+        "value": "4.8",
+        "explanation": "Eric's strong rebounding numbers highlight his physicality and tenacity in pursuing loose balls and securing possession for his team."
+      },
+      "stat3": {
+        "stat": "Field Goal Percentage",
+        "value": "41.8",
+        "explanation": "With a respectable field goal percentage, Eric demonstrates his ability to capitalize on scoring opportunities and provide a reliable source of offense from both inside and outside the paint."
+      }
+    }
+  },
+  {
+    "playerName": "Alijah Martin",
+    "position": "Wing",
+    "analysis": {
+      "stat1": {
+        "stat": "Points Per Game",
+        "value": "0.0",
+        "explanation": "As a Wing, Alijah Martin's points per game are crucial in creating scoring opportunities for themselves and their teammates."
+      },
+      "stat2": {
+        "stat": "Rebounds Per Game",
+        "value": "0.0",
+        "explanation": "Martin's rebounding abilities allow him to secure crucial possessions on both ends of the court, making his points per game more impactful."
+      },
+      "stat3": {
+        "stat": "Field Goal Percentage",
+        "value": "0.0",
+        "explanation": "With a high field goal percentage, Martin can consistently score from anywhere on the court, making him a reliable scoring option for his team."
+      }
+    }
+  },
+  {
+    "playerName": "Brice Williams",
+    "position": "Wing",
+    "analysis": {
+      "stat1": {
+        "stat": "Points Per Game",
+        "value": "0.0",
+        "explanation": "As a Wing, Brice Williams' ability to score efficiently is crucial in creating space and drawing defenders. A high points per game average showcases his capacity to drive and shoot effectively."
+      },
+      "stat2": {
+        "stat": "Rebounds Per Game",
+        "value": "0.0",
+        "explanation": "As a Wing, rebounding allows Brice Williams to secure the ball and transition quickly into offense. A high rebounds per game average demonstrates his ability to crash the boards and create second-chance opportunities."
+      },
+      "stat3": {
+        "stat": "Field Goal Percentage",
+        "value": "0.0",
+        "explanation": "As a Wing, Brice Williams' shooting efficiency can dictate the flow of the game. A high field goal percentage showcases his ability to create scoring opportunities and make decisive shots when it matters most."
+      }
+    }
+  },
+  {
+    "playerName": "Michael Ruzic",
+    "position": "Forward",
+    "analysis": {
+      "stat1": {
+        "stat": "Points Per Game",
+        "value": "1.6",
+        "explanation": "As a Forward, scoring efficiently is crucial to create opportunities for teammates and maintain a strong pace of play."
+      },
+      "stat2": {
+        "stat": "Rebounds Per Game",
+        "value": "1.0",
+        "explanation": "Rebounding effectively allows Michael Ruzic to secure possession, limit opponent's second-chance scoring, and create additional opportunities for his team."
+      },
+      "stat3": {
+        "stat": "Field Goal Percentage",
+        "value": "50.0",
+        "explanation": "A high field goal percentage indicates that Michael Ruzic is a reliable shooter, capable of creating scoring opportunities through both efficient shooting and clever positioning."
+      }
+    }
+  },
+  {
+    "playerName": "RJ Luis Jr.",
+    "position": "Forward",
+    "analysis": {
+      "stat1": {
+        "stat": "Rebounds Per Game",
+        "value": "0.0",
+        "explanation": "A Forward's rebounding ability is crucial in securing possession and limiting opponents' second-chance opportunities."
+      },
+      "stat2": {
+        "stat": "Field Goal Percentage",
+        "value": "0.0",
+        "explanation": "As a Forward, maintaining a high field goal percentage allows for efficient scoring and helps to spread out the opponent's defense."
+      },
+      "stat3": {
+        "stat": "Points Per Game",
+        "value": "0.0",
+        "explanation": "A Forward's ability to score points consistently is vital in creating a well-rounded offense and drawing defensive attention away from teammates."
+      }
+    }
+  },
+  {
+    "playerName": "Izan Almansa",
+    "position": "Big",
+    "analysis": {
+      "stat1": {
+        "stat": "Field Goal Percentage",
+        "value": "0.0",
+        "explanation": "A high field goal percentage is crucial for a Big player, as it allows them to score efficiently and stretch the defense"
+      },
+      "stat2": {
+        "stat": "Rebounds Per Game",
+        "value": "0.0",
+        "explanation": "As a Big player, Izan Almansa needs to be an elite rebounder to secure second-chance opportunities and limit opponents' chances on the glass"
+      },
+      "stat3": {
+        "stat": "Turnovers Per Game",
+        "value": "0.0",
+        "explanation": "Izan Almansa's ability to minimize turnovers is vital, as it allows them to maintain possession and create scoring opportunities in a half-court set"
+      }
+    }
+  },
+  {
+    "playerName": "Mark Sears",
+    "position": "Guard",
+    "analysis": {
+      "stat1": {
+        "stat": "Field Goal Percentage",
+        "value": "0.0",
+        "explanation": "A Guard's field goal percentage can indicate their ability to score efficiently and make smart decisions on the court."
+      },
+      "stat2": {
+        "stat": "Steals Per Game",
+        "value": "0.0",
+        "explanation": "As a Guard, steals per game are crucial in disrupting opponents' offenses and creating scoring opportunities for their team."
+      },
+      "stat3": {
+        "stat": "Turnovers Per Game",
+        "value": "0.0",
+        "explanation": "Guards with low turnover rates can maintain possession and control the tempo of the game, making them more effective in executing their team's offense."
+      }
+    }
+  },
+  {
+    "playerName": "Dink Pate",
+    "position": "Forward",
+    "analysis": {
+      "stat1": {
+        "stat": "Points Per Game",
+        "value": "11.0",
+        "explanation": "As a Forward, Dink Pate's ability to score efficiently is crucial in driving the team's offense and keeping opponents at bay."
+      },
+      "stat2": {
+        "stat": "Rebounds Per Game",
+        "value": "5.9",
+        "explanation": "With 5.9 rebounds per game, Dink Pate demonstrates his importance on the glass, providing a reliable source of second-chance opportunities and keeping possession of the ball."
+      },
+      "stat3": {
+        "stat": "Field Goal Percentage",
+        "value": "41.1",
+        "explanation": "Dink Pate's 41.1% field goal percentage showcases his ability to be effective from both inside and outside, making him a well-rounded threat on the court."
+      }
+    }
+  }
+]

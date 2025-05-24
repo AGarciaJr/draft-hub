@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { playerDataService } from '../services/playerDataService';
+import { usePageTooltips } from '../components/onboarding-tooltips/usePageTooltips';
 import {
   Container,
   Typography,
@@ -19,6 +20,7 @@ const IMAGE_HEIGHT = 300;
 const ProfilesPage: React.FC = () => {
   const navigate = useNavigate();
   const players = playerDataService.getAllPlayers();
+  usePageTooltips('profiles');
 
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>

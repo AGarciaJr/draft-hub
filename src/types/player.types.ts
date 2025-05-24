@@ -16,6 +16,7 @@ export interface PlayerBio {
   currentTeam: string;
   league: string;
   leagueType: string;
+  position?: string;
 }
 
 export interface ScoutRanking {
@@ -103,7 +104,7 @@ export interface SeasonLog {
   "FG2%": number;
   FGM3: number;
   FGA3: number;
-  "FG3%": number;
+  "3P%": number;
   FTM: number;
   FTA: number;
   "FT%": number;
@@ -116,6 +117,8 @@ export interface SeasonLog {
   TOV: number;
   PF: number;
   PTS: number;
+  '3PM': number;
+  FT: number;
 }
 
 export interface ScoutingReport {
@@ -126,8 +129,6 @@ export interface ScoutingReport {
   report: string;
   date?: string;
 }
-
-
 
 export interface PlayerStats {
   totalPlayers: number;

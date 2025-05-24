@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Typography, Paper, Divider } from '@mui/material';
-import type { ScoutingReport } from '../types/player.types';
+import type { ScoutingReport } from '../../types/player.types';
 
 interface ScoutingReportListProps {
   reports: ScoutingReport[];
