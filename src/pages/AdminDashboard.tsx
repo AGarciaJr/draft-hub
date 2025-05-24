@@ -1,8 +1,11 @@
 import React, { useState, useMemo } from 'react';
 import { playerDataService } from '../services/playerDataService';
-import { Box, Typography, TextField, Paper, Checkbox, FormControlLabel, Select, MenuItem, Button, Divider, Accordion, AccordionSummary, AccordionDetails, Container, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Stack } from '@mui/material';
+import { Box, Typography, TextField, Paper, Checkbox, FormControlLabel, Select, MenuItem, Button, Divider, Accordion, AccordionSummary, AccordionDetails, Stack } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import rawData from '../data/intern_project_data.json' with { type: 'json' }; // Import raw JSON data
+import type { PlayerBio } from '../types/player.types';
+import PlayerRawAccordion from '../components/admin/PlayerRawAccordion';
+import AddPlayerDialog from '../components/admin/AddPlayerDialog';
 
 // Add ScoutRanking interface
 interface ScoutRanking {
@@ -27,22 +30,6 @@ interface RawData {
   [key: string]: unknown;
 }
 
-// Update PlayerBio interface
-interface PlayerBio {
-  playerId: number;
-  name: string;
-  leagueType: string;
-  nationality: string;
-  height?: number;
-  weight?: number;
-  photoUrl?: string;
-  class?: string;
-  age?: number;
-  currentTeam?: string;
-  league?: string;
-  [key: string]: unknown;
-}
-
 // Define interfaces for scout data types
 interface ScoutData {
   rankedCount: number;
@@ -54,10 +41,11 @@ interface ScoutStat {
   scoutData: ScoutData;
 }
 
-type GroupedPlayerData = {
-   [category: string]: ScoutRanking[] | Record<string, unknown> 
+interface GroupedPlayerData {
+  [playerId: number]: {
+    [category: string]: unknown[] | Record<string, unknown>;
   };
-
+}
 
 const AdminDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'overview' | 'players' | 'rankings' | 'measurements' | 'gameLogs' | 'seasonLogs' | 'scouting' | 'raw' >('overview');
@@ -75,13 +63,29 @@ const AdminDashboard: React.FC = () => {
     leagueType: 'All',
     nationality: 'All'
   });
+  const [playerAction, setPlayerAction] = useState('');
+  const [showAddDialog, setShowAddDialog] = useState(false);
+  const [newPlayer, setNewPlayer] = useState({
+    name: '',
+    currentTeam: '',
+    league: '',
+    height: '',
+    weight: '',
+    nationality: '',
+    leagueType: ''
+  });
+  // Use a local state for players in the Players tab
+  const [localPlayers, setLocalPlayers] = useState<PlayerBio[]>(() => {
+    const players = playerDataService.getAllPlayers();
+    return players;
+  });
 
   const stats = playerDataService.getPlayerStats();
   const allPlayers = useMemo(() => playerDataService.getAllPlayers(), []);
 
   // Derived state based on search and filters
   const filteredPlayers = useMemo(() => {
-    let players = allPlayers;
+    let players = localPlayers;
 
     // Apply search term
     if (searchTerm) {
@@ -100,7 +104,7 @@ const AdminDashboard: React.FC = () => {
     // Age range filtering would go here
 
     return players;
-  }, [allPlayers, searchTerm, filters]);
+  }, [localPlayers, searchTerm, filters]);
 
   // Calculate average ranking for a player from grouped data
   const calculateAverageRank = (playerGroupedData: { scoutRankings?: ScoutRanking[] } & { [category: string]: unknown[] | unknown }) => {
@@ -166,13 +170,13 @@ const AdminDashboard: React.FC = () => {
 
   // Update the groupedRawData type and data handling
   const groupedRawData = useMemo(() => {
-    const grouped: { [playerId: number]: { [category: string]: unknown[] | unknown } } = {};
+    const grouped: GroupedPlayerData = {};
 
     Object.keys(rawData as unknown as RawData).forEach(category => {
       const data = (rawData as unknown as RawData)[category];
 
       if (Array.isArray(data)) {
-        data.forEach((item: { playerId?: number }) => {
+        data.forEach(item => {
           if (item.playerId !== undefined) {
             if (!grouped[item.playerId]) {
               grouped[item.playerId] = {};
@@ -189,7 +193,7 @@ const AdminDashboard: React.FC = () => {
           if (!grouped[typedData.playerId]) {
             grouped[typedData.playerId] = {};
           }
-          grouped[typedData.playerId][category] = data;
+          grouped[typedData.playerId][category] = data as Record<string, unknown>;
         }
       }
     });
@@ -243,20 +247,21 @@ const AdminDashboard: React.FC = () => {
   }, []); // Remove rawData dependencies
 
   // Calculate average ranking for a player from grouped data
-  const calculateAverageRankRawData = (playerGroupedData: GroupedPlayerData) => {
-    const rankingsArray = playerGroupedData.scoutRankings; // This should be an array with one ranking object
+  const calculateAverageRankRawData = (playerGroupedData: { [category: string]: PlayerBio[] | ScoutRanking[] | Record<string, unknown> }) => {
+    const rankingsArray = playerGroupedData.scoutRankings as ScoutRanking[];
     if (!Array.isArray(rankingsArray) || rankingsArray.length === 0) return Infinity;
-  
-    const rankings = rankingsArray[0]; // Get the single ranking object
+
+    const rankings = rankingsArray[0];
     if (!rankings) return Infinity;
-  
-    const rankValues: number[] = Object.entries(rankings)
-      .filter(([key]) => key !== 'playerId' && rankings[key] != null) // Filter out null/undefined ranks as well
+
+    const rankValues: number[] = Object.entries(rankings as Record<string, number | string | null>)
+      .filter(([key, value]) => key !== 'playerId' && value != null)
       .map(([, value]) => Number(value))
       .filter(value => !isNaN(value));
-  
+
+
     const count = rankValues.length;
-  
+
     return count > 0
       ? rankValues.reduce((sum, rank) => sum + rank, 0) / count
       : Infinity;
@@ -265,43 +270,46 @@ const AdminDashboard: React.FC = () => {
 
   // Update the filter functions
   const processedRawData = useMemo(() => {
-    let filteredEntries = Object.entries(groupedRawData as Record<number, GroupedPlayerData>);
+    let filteredEntries = Object.entries(groupedRawData);
 
     if (rawDataFilter.search) {
       filteredEntries = filteredEntries.filter(([, data]) => {
-        const bio = (data.bio as PlayerBio[])?.[0];
+        const d = data as { [category: string]: PlayerBio[] | ScoutRanking[] | Record<string, unknown> };
+        const bio = (d.bio as PlayerBio[])?.[0];
         return bio?.name?.toLowerCase().includes(rawDataFilter.search.toLowerCase());
       });
     }
 
     if (rawDataFilter.leagueType !== 'All') {
       filteredEntries = filteredEntries.filter(([, data]) => {
-        const bio = (data.bio as PlayerBio[])?.[0];
+        const d = data as { [category: string]: PlayerBio[] | ScoutRanking[] | Record<string, unknown> };
+        const bio = (d.bio as PlayerBio[])?.[0];
         return bio?.leagueType === rawDataFilter.leagueType;
       });
     }
 
     if (rawDataFilter.nationality !== 'All') {
       filteredEntries = filteredEntries.filter(([, data]) => {
-        const bio = (data.bio as PlayerBio[])?.[0];
+        const d = data as { [category: string]: PlayerBio[] | ScoutRanking[] | Record<string, unknown> };
+        const bio = (d.bio as PlayerBio[])?.[0];
         return bio?.nationality === rawDataFilter.nationality;
       });
     }
 
     // Sort the filtered data
     filteredEntries.sort(([idA, dataA], [idB, dataB]) => {
-      const bioA = (dataA.bio as PlayerBio[])?.[0];
-      const bioB = (dataB.bio as PlayerBio[])?.[0];
+      const bioA = (dataA as { [category: string]: PlayerBio[] | ScoutRanking[] | Record<string, unknown> }).bio as PlayerBio[];
+      const bioB = (dataB as { [category: string]: PlayerBio[] | ScoutRanking[] | Record<string, unknown> }).bio as PlayerBio[];
 
       switch (rawDataSortBy) {
         case 'name': {
-          const nameA = (bioA?.name || '').toLowerCase();
-          const nameB = (bioB?.name || '').toLowerCase();
+          const nameA = (bioA?.[0]?.name || '').toLowerCase();
+          const nameB = (bioB?.[0]?.name || '').toLowerCase();
           return nameA.localeCompare(nameB);
         }
         case 'avgRank': {
-          const avgRankA = calculateAverageRankRawData(dataA);
-          const avgRankB = calculateAverageRankRawData(dataB);
+          const avgRankA = calculateAverageRankRawData(dataA as { [category: string]: PlayerBio[] | ScoutRanking[] | Record<string, unknown> });
+          const avgRankB = calculateAverageRankRawData(dataB as { [category: string]: PlayerBio[] | ScoutRanking[] | Record<string, unknown> });
           return avgRankA - avgRankB;
         }
         case 'id': {
@@ -314,6 +322,56 @@ const AdminDashboard: React.FC = () => {
 
     return filteredEntries;
   }, [groupedRawData, rawDataSortBy, rawDataFilter]);
+
+  // Handle action perform
+  const handlePerformAction = () => {
+    if (playerAction === 'delete') {
+      setLocalPlayers(prev => prev.filter(p => !selectedPlayers.includes(p.playerId)));
+      setSelectedPlayers([]);
+      setPlayerAction('');
+    } else if (playerAction === 'add') {
+      setShowAddDialog(true);
+    }
+  };
+
+  // Validation before enabling the Add button
+  const isFormValid = newPlayer.name.trim() !== '' && newPlayer.currentTeam.trim() !== '';
+
+  const handleAddPlayer = () => {
+    const nextId = Math.max(0, ...localPlayers.map(p => p.playerId)) + 1;
+    const newEntry: PlayerBio = {
+      playerId: nextId,
+      name: newPlayer.name,
+      firstName: newPlayer.name.split(' ')[0] || '',
+      lastName: newPlayer.name.split(' ').slice(1).join(' ') || '',
+      birthDate: '',
+      height: Number(newPlayer.height),
+      weight: Number(newPlayer.weight),
+      highSchool: null,
+      highSchoolState: null,
+      homeTown: '',
+      homeState: null,
+      homeCountry: '',
+      nationality: newPlayer.nationality,
+      photoUrl: null,
+      currentTeam: newPlayer.currentTeam,
+      league: newPlayer.league,
+      leagueType: newPlayer.leagueType
+    };
+
+    setLocalPlayers(prev => [...prev, newEntry]);
+    setShowAddDialog(false);
+    setNewPlayer({
+      name: '',
+      currentTeam: '',
+      league: '',
+      height: '',
+      weight: '',
+      nationality: '',
+      leagueType: ''
+    });
+  };
+
 
   // Overview Content using MUI Components
   const overviewContent = (
@@ -438,11 +496,11 @@ const AdminDashboard: React.FC = () => {
 
   // Raw Data Content
   const rawDataContent = (
-    <Box sx={{ p: 2 }}>
-      <Typography variant="h5" component="h2" gutterBottom>Raw Data by Player</Typography>
+    <Box sx={{ bgcolor: 'white', p: 3, borderRadius: 2, mb: 4 }}>
+      <Typography variant="h5" component="h2" gutterBottom sx={{ mb: 2 }}>Raw Data by Player</Typography>
       
       {/* Controls */}
-      <Stack direction="row" spacing={2} sx={{ mb: 3 }}>
+      <Stack direction="row" spacing={2} sx={{ mb: 3, alignItems: 'center' }}>
         <TextField
           size="small"
           label="Search Players"
@@ -495,76 +553,13 @@ const AdminDashboard: React.FC = () => {
       {/* Player list */}
       {
         processedRawData.length > 0 ? (
-          processedRawData.map(([playerId, playerCategories]) => {
-            const playerBio = Array.isArray(playerCategories.bio) ? playerCategories.bio[0] : null;
-            const playerName = playerBio?.name || `Player ${playerId}`;
-            const avgRank = calculateAverageRankRawData(playerCategories);
-            const rankDisplay = avgRank === Infinity ? 'N/A' : avgRank.toFixed(1);
-
-    return (
-              <Accordion key={playerId} elevation={1} sx={{ mt: 1 }}>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                    <Typography variant="subtitle1" fontWeight="bold">{playerName}</Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      (ID: {playerId} | Avg Rank: {rankDisplay})
-                    </Typography>
-                  </Box>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <Box>
-                    {
-                      Object.keys(playerCategories).map((category) => {
-                        const categoryData = playerCategories[category];
-
-                        return (
-                          <Box key={category} sx={{ mb: 2 }}>
-                             <Typography variant="h6" component="h3" gutterBottom>{category.charAt(0).toUpperCase() + category.slice(1)} Data</Typography>
-                             {
-                                Array.isArray(categoryData) && categoryData.length > 0 ? (
-                                  <TableContainer component={Paper} sx={{ mt: 1 }}>
-                                    <Table size="small">
-                                      <TableHead>
-                                        <TableRow>
-                                          {Object.keys(categoryData[0]).map((header) => (
-                                            <TableCell key={header} sx={{ fontWeight: 'bold' }}>
-                                              {header}
-                                            </TableCell>
-                                          ))}
-                                        </TableRow>
-                                      </TableHead>
-                                      <TableBody>
-                                        {categoryData.map((row: Record<string, unknown>, rowIndex: number) => (
-                                          <TableRow key={rowIndex}>
-                                            {Object.values(row).map((cellValue: unknown, cellIndex: number) => (
-                                              <TableCell key={cellIndex}>
-                                                {typeof cellValue === 'object' && cellValue !== null
-                                                  ? JSON.stringify(cellValue, null, 2)
-                                                  : String(cellValue)}
-                                              </TableCell>
-                                            ))}
-                                          </TableRow>
-                                        ))}
-                                      </TableBody>
-                                    </Table>
-                                  </TableContainer>
-                                ) : (typeof categoryData === 'object' && categoryData !== null) ? (
-                                   <pre style={{ margin: 0, overflowX: 'auto' }}>
-                                      <code>{JSON.stringify(categoryData, null, 2)}</code>
-                                    </pre>
-                                ) : (
-                                  <Typography variant="body2">{String(categoryData)}</Typography>
-                                )
-                             }
-                          </Box>
-                        );
-                      })
-                    }
-                  </Box>
-                </AccordionDetails>
-              </Accordion>
-            );
-          })
+          processedRawData.map(([playerId, playerCategories]) => (
+            <PlayerRawAccordion
+              key={playerId}
+              playerId={playerId}
+              playerCategories={playerCategories}
+            />
+          ))
         ) : (
           <Typography>No players match the current filters.</Typography>
         )
@@ -573,7 +568,11 @@ const AdminDashboard: React.FC = () => {
   );
 
   return (
-    <Container maxWidth="xl" sx={{ mt: 2 }}>
+    <Box sx={{ px: 2, py: 4 }}>
+      <Typography variant="h4" component="h1" gutterBottom sx={{ color: '#fff' }}>
+        Admin Dashboard
+      </Typography>
+
       {/* Tab Navigation */}
       <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 2 }}>
         <Box sx={{ display: 'flex', gap: 2 }}>
@@ -656,10 +655,14 @@ const AdminDashboard: React.FC = () => {
               {/* Filter/Action Bar */}
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 2, gap: 2 }}>
                 <Typography variant="h6">Actions:</Typography>
-                <Select size="small" value="" displayEmpty> {/* Add actions here */}
+                <Select size="small" value={playerAction} onChange={e => setPlayerAction(e.target.value)} sx={{ minWidth: 180 }}>
                   <MenuItem value="">Select Action from Drop-down</MenuItem>
+                  <MenuItem value="delete">Delete Players</MenuItem>
+                  <MenuItem value="add">Add Players</MenuItem>
                 </Select>
-                <Button variant="contained" size="small">Perform</Button>
+                <Button variant="contained" size="small" onClick={handlePerformAction} disabled={!playerAction || (playerAction === 'delete' && selectedPlayers.length === 0)}>
+                  Perform
+                </Button>
 
                 <Typography variant="h6" sx={{ ml: 'auto' }}>Sort by:</Typography>
                 <Select size="small" value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
@@ -718,6 +721,16 @@ const AdminDashboard: React.FC = () => {
                   ))}
                 </Box>
               </Box>
+
+              {/* Add Player Dialog */}
+              <AddPlayerDialog
+                open={showAddDialog}
+                onClose={() => setShowAddDialog(false)}
+                onAdd={handleAddPlayer}
+                newPlayer={newPlayer}
+                setNewPlayer={setNewPlayer}
+                isFormValid={isFormValid}
+              />
             </Box>
           </Box>
         )
@@ -731,7 +744,7 @@ const AdminDashboard: React.FC = () => {
       }
       {/* Add content for other tabs here */}
 
-    </Container>
+    </Box>
   );
 };
 

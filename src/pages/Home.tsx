@@ -3,8 +3,11 @@ import { Box, Typography } from '@mui/material';
 import Hero from '../components/home/Hero';
 import PlayerCarousel from '../components/home/PlayerCarousel';
 import ChartCarousel from '../components/charts/ChartCarousel';
+import { usePageTooltips } from '../components/onboarding-tooltips/usePageTooltips';
 
 const Home: React.FC = () => {
+  usePageTooltips('home');
+
   return (
     <Box sx={{ px: 4, py: 6 }}>
       <Hero />

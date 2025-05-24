@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { playerDataService } from '../services/playerDataService';
 import { playerStatsService } from '../services/playerStatsService';
 import { Box, Typography, Container } from '@mui/material';
+import { usePageTooltips } from '../components/onboarding-tooltips/usePageTooltips';
 import ScoutingReportForm from '../components/scouting/ScoutingReportForm';
 import ScoutingReportList from '../components/scouting/ScoutingReportList';
 import PlayerInfo from '../components/player/PlayerInfo';
@@ -17,6 +18,7 @@ const PlayerProfile: React.FC = () => {
   const { playerId } = useParams();
   const numericPlayerId = Number(playerId);
   const player = playerDataService.getPlayerById(numericPlayerId);
+  usePageTooltips('playerProfile');
 
   // Get existing reports from the JSON
   const existingReports = playerDataService.getScoutingReportsByPlayerId(numericPlayerId);

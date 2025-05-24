@@ -8,6 +8,7 @@ import PlayerStatProfile from './pages/PlayerStatProfile';
 import NavBar from './components/layout/NavBar';
 import Stats from './features/stat-board/Stats';
 import Home from './pages/Home';
+import { TooltipProvider } from './components/onboarding-tooltips/TooltipProvider';
 
 const theme = createTheme({
   palette: {
@@ -48,26 +49,28 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Box
-        sx={{
-          minHeight: '100vh',
-          width: '100%',
-          overflow: 'hidden',
-          position: 'relative',
-          backgroundColor: 'background.default'
-        }}
-      >
-        <NavBar />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/draft-board" element={<BigBoard />} />
-          <Route path="/stats" element={<Stats />} />
-          <Route path="/admin" element={<AdminDashboard />} />
-          <Route path="/profiles" element={<ProfilesPage />} />
-          <Route path="/profiles/:playerId" element={<PlayerProfile />} />
-          <Route path="/stat-profiles/:playerId" element={<PlayerStatProfile />} />
-        </Routes>
-      </Box>
+      <TooltipProvider>
+        <Box
+          sx={{
+            minHeight: '100vh',
+            width: '100%',
+            overflow: 'hidden',
+            position: 'relative',
+            backgroundColor: 'background.default'
+          }}
+        >
+          <NavBar />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/draft-board" element={<BigBoard />} />
+            <Route path="/stats" element={<Stats />} />
+            <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/profiles" element={<ProfilesPage />} />
+            <Route path="/profiles/:playerId" element={<PlayerProfile />} />
+            <Route path="/stat-profiles/:playerId" element={<PlayerStatProfile />} />
+          </Routes>
+        </Box>
+      </TooltipProvider>
     </ThemeProvider>
   );
 }

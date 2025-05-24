@@ -100,7 +100,7 @@ const PlayerCard: React.FC<PlayerCardProps> = ({
   const displayRank = trueRank ?? null;
 
   return (
-    <Paper elevation={3} sx={{ borderRadius: 3, overflow: 'hidden', mb: 4 }}>
+    <Paper elevation={3} sx={{ borderRadius: 3, overflow: 'hidden', mb: 4 }} className="player-card">
       {/* Header Bar */}
       <Box
         sx={{
