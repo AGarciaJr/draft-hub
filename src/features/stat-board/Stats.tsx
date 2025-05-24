@@ -2,8 +2,11 @@ import { Box, Stack, Typography } from '@mui/material';
 import StatCard from '../../components/StatCard';
 import type { Stat } from '../../components/StatCard';
 import { getTopPlayers } from '../../utils/statUtils';
+import { usePageTooltips } from '../../components/onboarding-tooltips/usePageTooltips';
 
 const StatsPage = () => {
+  usePageTooltips('stats');
+
   return (
     <Box maxWidth="lg" mx="auto" p={4}>
       <Typography variant="h4" fontWeight="bold" mb={4} sx={{ color: 'white' }}>
@@ -20,7 +23,7 @@ const StatsPage = () => {
           const data = getTopPlayers(stat);
           console.log('Top players for', stat, data);
           return (
-            <Box key={stat} flex={1} minWidth={275} maxWidth={350}>
+            <Box key={stat} flex={1} minWidth={275} maxWidth={350} className="stat-card">
               <StatCard
                 stat={stat}
                 label={
