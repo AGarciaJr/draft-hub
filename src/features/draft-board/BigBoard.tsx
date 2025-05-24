@@ -7,6 +7,7 @@ import { playerDataService } from '../../services/playerDataService';
 import scrapedPositions from '../../data/processed/scraped_positions.json' with { type: 'json' };
 import PlayerCard from '../../components/player/PlayerCard';
 import DraftBoardControls from '../../components/draft-board/DraftBoardControls';
+import { usePageTooltips } from '../../components/onboarding-tooltips/usePageTooltips';
 
 const nameToPositionMap = new Map<string, string>(Object.entries(scrapedPositions));
 
@@ -62,6 +63,8 @@ function getAgeFromBirthDate(birthDate: string): number | null {
 }
 
 const BigBoard: React.FC = () => {
+  usePageTooltips('draftBoard');
+  
   const [sortBy, setSortBy] = useState<'avgRank' | string>('avgRank');
   const [selectedScout, setSelectedScout] = useState<string>('allScouts');
   const [expandedPlayerId, setExpandedPlayerId] = useState<number | null>(null);
@@ -191,24 +194,26 @@ const BigBoard: React.FC = () => {
       </Typography>
 
       {/* Filters & Toggle */}
-      <DraftBoardControls
-        sortBy={sortBy}
-        setSortBy={setSortBy}
-        selectedScout={selectedScout}
-        setSelectedScout={setSelectedScout}
-        positionFilter={positionFilter}
-        setPositionFilter={setPositionFilter}
-        schoolFilter={schoolFilter}
-        setSchoolFilter={setSchoolFilter}
-        attributeFilter={attributeFilter}
-        setAttributeFilter={setAttributeFilter}
-        condensedView={condensedView}
-        setCondensedView={setCondensedView}
-        scoutNames={scoutNames}
-        availableScouts={availableScouts}
-        playerBios={playerBios}
-        nameToPositionMap={nameToPositionMap}
-      />
+      <div className="draft-board-controls">
+        <DraftBoardControls
+          sortBy={sortBy}
+          setSortBy={setSortBy}
+          selectedScout={selectedScout}
+          setSelectedScout={setSelectedScout}
+          positionFilter={positionFilter}
+          setPositionFilter={setPositionFilter}
+          schoolFilter={schoolFilter}
+          setSchoolFilter={setSchoolFilter}
+          attributeFilter={attributeFilter}
+          setAttributeFilter={setAttributeFilter}
+          condensedView={condensedView}
+          setCondensedView={setCondensedView}
+          scoutNames={scoutNames}
+          availableScouts={availableScouts}
+          playerBios={playerBios}
+          nameToPositionMap={nameToPositionMap}
+        />
+      </div>
 
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
         {sortedPlayers.map((player, idx) => {
