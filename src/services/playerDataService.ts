@@ -8,7 +8,7 @@ import type {
   SeasonLog,
   ScoutingReport
 } from '../types/player.types.js';
-import internData from '../data/intern_project_data.json';
+import internData from '../data/intern_project_data.json' with { type: 'json' };
 
 class PlayerDataService {
   private data: PlayerData;

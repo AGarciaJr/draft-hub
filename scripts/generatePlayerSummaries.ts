@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import { spawn } from 'child_process';
 import type { PlayerBio, GameLog } from '../src/types/player.types.js';
-import { playerDataService } from '../src/services/playerDataService.js';
+import { playerDataService } from '../src/services/playerDataService.js' with { type: 'json' };
 
 function formatHeight(inches: number): string {
   const ft = Math.floor(inches / 12);

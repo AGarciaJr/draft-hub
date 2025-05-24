@@ -1,5 +1,5 @@
-import internData from './intern_project_data.json';
-import playerSummaries from './player_summaries.json';
+import internData from './intern_project_data.json' with { type: 'json' };
+import playerSummaries from './player_summaries.json' with { type: 'json' };
 import type { PlayerBio } from '../types/player.types.ts';
 
 export const playerBios: PlayerBio[] = internData.bio;

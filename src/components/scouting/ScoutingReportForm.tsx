@@ -1,7 +1,7 @@
 // src/components/ScoutingReportForm.tsx
 import React, { useState } from 'react';
 import { Paper, TextField, Button, Typography, Box } from '@mui/material';
-import type { ScoutingReport } from '../types/player.types';
+import type { ScoutingReport } from '../../types/player.types';
 
 interface Props {
   playerId: number;

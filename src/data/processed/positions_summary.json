@@ -1,0 +1,304 @@
+{
+  "Unknown": [
+    {
+      "name": "Cooper Flagg",
+      "playerId": 170531,
+      "school": "Duke"
+    },
+    {
+      "name": "Dylan Harper",
+      "playerId": 161608,
+      "school": "Rutgers"
+    },
+    {
+      "name": "Ace Bailey",
+      "playerId": 161710,
+      "school": "Rutgers"
+    },
+    {
+      "name": "VJ Edgecombe",
+      "playerId": 181834,
+      "school": "Baylor"
+    },
+    {
+      "name": "Kasparas Jakucionis",
+      "playerId": 140378,
+      "school": "Illinois"
+    },
+    {
+      "name": "Kon Knueppel",
+      "playerId": 161852,
+      "school": "Duke"
+    },
+    {
+      "name": "Khaman Maluach",
+      "playerId": 164614,
+      "school": "Duke"
+    },
+    {
+      "name": "Egor Demin",
+      "playerId": 138145,
+      "school": "BYU"
+    },
+    {
+      "name": "Jeremiah Fears",
+      "playerId": 183971,
+      "school": "Oklahoma"
+    },
+    {
+      "name": "Derik Queen",
+      "playerId": 158352,
+      "school": "Maryland"
+    },
+    {
+      "name": "Tre Johnson",
+      "playerId": 162155,
+      "school": "Texas"
+    },
+    {
+      "name": "Joan Beringer",
+      "playerId": 182192,
+      "school": "Cedevita Olimpija"
+    },
+    {
+      "name": "Nolan Traore",
+      "playerId": 141122,
+      "school": "Saint Quentin"
+    },
+    {
+      "name": "Liam McNeeley",
+      "playerId": 159895,
+      "school": "Connecticut"
+    },
+    {
+      "name": "Hugo Gonzalez",
+      "playerId": 141473,
+      "school": "Real Madrid"
+    },
+    {
+      "name": "Danny Wolf",
+      "playerId": 153927,
+      "school": "Michigan"
+    },
+    {
+      "name": "Ben Saraf",
+      "playerId": 162876,
+      "school": "Ratiopharm Ulm"
+    },
+    {
+      "name": "Collin Murray-Boyles",
+      "playerId": 171552,
+      "school": "South Carolina"
+    },
+    {
+      "name": "Noa Essengue",
+      "playerId": 141110,
+      "school": "Ratiopharm Ulm"
+    },
+    {
+      "name": "Will Riley",
+      "playerId": 161919,
+      "school": "Illinois"
+    },
+    {
+      "name": "Asa Newell",
+      "playerId": 171542,
+      "school": "Georgia"
+    },
+    {
+      "name": "Drake Powell",
+      "playerId": 171436,
+      "school": "North Carolina"
+    },
+    {
+      "name": "Carter Bryant",
+      "playerId": 169666,
+      "school": "Arizona"
+    },
+    {
+      "name": "Thomas Sorber",
+      "playerId": 154835,
+      "school": "Georgetown"
+    },
+    {
+      "name": "Adou Thiero",
+      "playerId": 172132,
+      "school": "Arkansas"
+    },
+    {
+      "name": "Alex Condon",
+      "playerId": 159033,
+      "school": "Florida"
+    },
+    {
+      "name": "Noah Penda",
+      "playerId": 130696,
+      "school": "Le Mans"
+    },
+    {
+      "name": "Rasheer Fleming",
+      "playerId": 161180,
+      "school": "Saint Joseph's"
+    },
+    {
+      "name": "Alex Karaban",
+      "playerId": 144830,
+      "school": "Connecticut"
+    },
+    {
+      "name": "Jase Richardson",
+      "playerId": 161742,
+      "school": "Michigan St"
+    },
+    {
+      "name": "Ryan Kalkbrenner",
+      "playerId": 124543,
+      "school": "Creighton"
+    },
+    {
+      "name": "Michael Ruzic",
+      "playerId": 141197,
+      "school": "Joventut"
+    },
+    {
+      "name": "Ian Jackson",
+      "playerId": 159744,
+      "school": "North Carolina"
+    },
+    {
+      "name": "Sergio De Larrea",
+      "playerId": 136466,
+      "school": "Valencia"
+    },
+    {
+      "name": "Maxime Raynaud",
+      "playerId": 123733,
+      "school": "Stanford"
+    },
+    {
+      "name": "Alex Toohey",
+      "playerId": 129665,
+      "school": "Sydney"
+    },
+    {
+      "name": "Boogie Fland",
+      "playerId": 159898,
+      "school": "Arkansas"
+    },
+    {
+      "name": "Miles Byrd",
+      "playerId": 155302,
+      "school": "San Diego St"
+    },
+    {
+      "name": "Chaz Lanier",
+      "playerId": 157395,
+      "school": "Tennessee"
+    },
+    {
+      "name": "Tyrese Proctor",
+      "playerId": 129693,
+      "school": "Duke"
+    },
+    {
+      "name": "Johni Broome",
+      "playerId": 139482,
+      "school": "Auburn"
+    },
+    {
+      "name": "Dink Pate",
+      "playerId": 164509,
+      "school": "Mexico City"
+    },
+    {
+      "name": "Darrion Williams",
+      "playerId": 155317,
+      "school": "Texas Tech"
+    },
+    {
+      "name": "Eric Dixon",
+      "playerId": 99451,
+      "school": "Villanova"
+    },
+    {
+      "name": "Kam Jones",
+      "playerId": 149244,
+      "school": "Marquette"
+    },
+    {
+      "name": "Sion James",
+      "playerId": 139181,
+      "school": "Duke"
+    },
+    {
+      "name": "Johann Grunloh",
+      "playerId": 148503,
+      "school": "Vechta"
+    },
+    {
+      "name": "Joseph Tugler",
+      "playerId": 170920,
+      "school": "Houston"
+    },
+    {
+      "name": "Nique Clifford",
+      "playerId": 144537,
+      "school": "Colorado St"
+    },
+    {
+      "name": "Isaiah Evans",
+      "playerId": 161559,
+      "school": "Duke"
+    },
+    {
+      "name": "Rocco Zikarsky",
+      "playerId": 164825,
+      "school": "Brisbane"
+    },
+    {
+      "name": "Bogoljub Markovic",
+      "playerId": 159976,
+      "school": "Mega Superbet"
+    },
+    {
+      "name": "Mouhamed Faye",
+      "playerId": 172020,
+      "school": "Reggio Emilia"
+    },
+    {
+      "name": "Cedric Coward",
+      "playerId": 179629,
+      "school": "Washington St"
+    },
+    {
+      "name": "Yaxel Lendeborg",
+      "playerId": 193314,
+      "school": "UAB"
+    },
+    {
+      "name": "Zvonimir Ivisic",
+      "playerId": 118028,
+      "school": "Arkansas"
+    },
+    {
+      "name": "JT Toppin",
+      "playerId": 164505,
+      "school": "Texas Tech"
+    },
+    {
+      "name": "Koby Brea",
+      "playerId": 140078,
+      "school": "Kentucky"
+    },
+    {
+      "name": "Malique Lewis",
+      "playerId": 167838,
+      "school": "South East Melbourne"
+    },
+    {
+      "name": "Hunter Sallis",
+      "playerId": 142035,
+      "school": "Wake Forest"
+    }
+  ]
+}

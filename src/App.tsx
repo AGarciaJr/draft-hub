@@ -1,12 +1,14 @@
 import { ThemeProvider, createTheme, CssBaseline, Box, } from '@mui/material';
 import { Routes, Route } from 'react-router-dom';
-import PlayerCarousel from './components/PlayerCarousel';
+import PlayerCarousel from './components/home/PlayerCarousel';
 import BigBoard from './features/draft-board/BigBoard';
 import AdminDashboard from './pages/AdminDashboard';
 import ProfilesPage from './pages/ProfilesPage';
 import PlayerProfile from './pages/PlayerProfile';
-import NavBar from './components/NavBar';
-import Hero from './components/Hero';
+import PlayerStatProfile from './pages/PlayerStatProfile';
+import NavBar from './components/layout/NavBar';
+import Hero from './components/home/Hero';
+import Stats from './features/stat-board/Stats';
 
 const theme = createTheme({
   palette: {
@@ -69,9 +71,11 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/draft-board" element={<BigBoard />} />
+          <Route path="/stats" element={<Stats />} />
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/profiles" element={<ProfilesPage />} />
           <Route path="/profiles/:playerId" element={<PlayerProfile />} />
+          <Route path="/stat-profiles/:playerId" element={<PlayerStatProfile />} />
         </Routes>
       </Box>
     </ThemeProvider>

@@ -9,6 +9,7 @@ const NavBar: React.FC = () => {
         <Button color="inherit" component={Link} to="/">Home</Button>
         <Button color="inherit" component={Link} to="/draft-board">Draft Board</Button>
         <Button color="inherit" component={Link} to="/profiles">Profiles</Button>
+        <Button color="inherit" component={Link} to="/stats">Stats</Button>
       </Toolbar>
     </AppBar>
   );
