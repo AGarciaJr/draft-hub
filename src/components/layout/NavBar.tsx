@@ -15,6 +15,7 @@ const NavBar: React.FC = () => {
         <Button color="inherit" component={Link} to="/profiles">Profiles</Button>
         <Button color="inherit" component={Link} to="/stats">Stats</Button>
         <div style={{ marginLeft: 'auto' }}>
+          <Button color="inherit" component={Link} to="/admin">Admin</Button>
           <Tooltip title={isTooltipEnabled ? "Disable Tutorials" : "Enable Tutorials"}>
             <IconButton color="inherit" onClick={toggleTooltips}>
               <HelpOutlineIcon />
