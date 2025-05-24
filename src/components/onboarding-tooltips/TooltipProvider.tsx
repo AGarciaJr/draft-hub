@@ -1,97 +1,45 @@
-import React, { createContext, useContext, useState } from 'react';
-import type { ReactNode } from 'react';
-import Joyride, { STATUS } from 'react-joyride';
-import type { CallBackProps } from 'react-joyride';
-
-interface TooltipContextType {
-  isTooltipEnabled: boolean;
-  toggleTooltips: () => void;
-  startTour: (steps: any[], tourId: string) => void;
-}
-
-const TooltipContext = createContext<TooltipContextType | undefined>(undefined);
-
-export const useTooltip = () => {
-  const context = useContext(TooltipContext);
-  if (!context) {
-    throw new Error('useTooltip must be used within a TooltipProvider');
-  }
-  return context;
-};
+import React, { useState } from 'react';
+import Joyride, { STATUS, type Step, type CallBackProps } from 'react-joyride';
+import { TooltipContext } from './tooltipContext';
 
 interface TooltipProviderProps {
-  children: ReactNode;
+  children: React.ReactNode;
 }
 
 export const TooltipProvider: React.FC<TooltipProviderProps> = ({ children }) => {
   const [isTooltipEnabled, setIsTooltipEnabled] = useState(() => {
     const saved = localStorage.getItem('tooltipsEnabled');
-    const enabled = saved ? JSON.parse(saved) : true;
-    console.log('[TooltipProvider] Initial tooltip state:', enabled);
-    return enabled;
+    return saved ? JSON.parse(saved) : true;
   });
-  const [steps, setSteps] = useState<any[]>([]);
+  const [steps, setSteps] = useState<Step[]>([]);
   const [run, setRun] = useState(false);
   const [currentTourId, setCurrentTourId] = useState<string>('');
 
   const toggleTooltips = () => {
     const newValue = !isTooltipEnabled;
-    console.log('[TooltipProvider] Toggling tooltips:', newValue);
     setIsTooltipEnabled(newValue);
     localStorage.setItem('tooltipsEnabled', JSON.stringify(newValue));
-    
-    // If enabling tooltips, clear completed tours
-    if (newValue) {
-      console.log('[TooltipProvider] Clearing completed tours');
-      localStorage.removeItem('completedTours');
-    }
+    if (newValue) localStorage.removeItem('completedTours');
   };
 
-  const startTour = (newSteps: any[], tourId: string) => {
-    console.log('[TooltipProvider] Attempting to start tour:', {
-      tourId,
-      isTooltipEnabled,
-      stepsCount: newSteps.length
-    });
-
+  const startTour = (newSteps: Step[], tourId: string) => {
     if (isTooltipEnabled) {
-      // Check if this tour has been completed
       const completedTours = JSON.parse(localStorage.getItem('completedTours') || '[]');
-      console.log('[TooltipProvider] Completed tours:', completedTours);
-      
-      if (completedTours.includes(tourId)) {
-        console.log('[TooltipProvider] Tour already completed:', tourId);
-        return;
-      }
-
-      console.log('[TooltipProvider] Starting new tour:', tourId);
+      if (completedTours.includes(tourId)) return;
       setSteps(newSteps);
       setCurrentTourId(tourId);
-      // Add a small delay to ensure elements are mounted
-      setTimeout(() => {
-        console.log('[TooltipProvider] Setting run to true for tour:', tourId);
-        setRun(true);
-      }, 500);
-    } else {
-      console.log('[TooltipProvider] Tooltips are disabled, not starting tour');
+      setTimeout(() => setRun(true), 500);
     }
   };
 
   const handleJoyrideCallback = (data: CallBackProps) => {
-    const { status, type } = data;
-    console.log('[TooltipProvider] Joyride callback:', { status, type, currentTourId });
-
+    const { status } = data;
     if (status === STATUS.FINISHED || status === STATUS.SKIPPED) {
-      console.log('[TooltipProvider] Tour ended:', { status, currentTourId });
       setRun(false);
-      // Save the completed tour ID
-      if (currentTourId) {
-        const completedTours = JSON.parse(localStorage.getItem('completedTours') || '[]');
-        if (!completedTours.includes(currentTourId)) {
-          completedTours.push(currentTourId);
-          localStorage.setItem('completedTours', JSON.stringify(completedTours));
-          console.log('[TooltipProvider] Saved completed tour:', currentTourId);
-        }
+      const completedTours = JSON.parse(localStorage.getItem('completedTours') || '[]');
+      if (!completedTours.includes(currentTourId)) {
+        completedTours.push(currentTourId);
+        localStorage.setItem('completedTours', JSON.stringify(completedTours));
       }
     }
   };
@@ -108,16 +56,9 @@ export const TooltipProvider: React.FC<TooltipProviderProps> = ({ children }) =>
         showProgress
         showSkipButton
         steps={steps}
-        styles={{
-          options: {
-            zIndex: 10000,
-            primaryColor: '#0070f3',
-          },
-        }}
-        floaterProps={{
-          disableAnimation: true,
-        }}
+        styles={{ options: { zIndex: 10000, primaryColor: '#0070f3' } }}
+        floaterProps={{ disableAnimation: true }}
       />
     </TooltipContext.Provider>
   );
-}; 
+};
