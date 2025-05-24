@@ -4,22 +4,33 @@ import TopScorersChart from '../components/charts/TopScorerChart';
 import Hero from '../components/home/Hero'
 import PlayerCarousel from '../components/home/PlayerCarousel';
 import { playerDataService } from '../services/playerDataService';
+import type { SeasonLog } from '../types/player.types';
 
 const Home: React.FC = () => {
   const allSeasonLogs = playerDataService.getAllSeasonLogs();
 
   // Get top 10 scorers
   const topScorers = allSeasonLogs
+    // Group by playerId and get their most recent season
+    .reduce((acc, log) => {
+      const existing = acc.find(l => l.playerId === log.playerId);
+      if (!existing || log.Season > existing.Season) {
+        return [...acc.filter(l => l.playerId !== log.playerId), log];
+      }
+      return acc;
+    }, [] as SeasonLog[])
     .filter(log => log.PTS !== undefined)
-    .sort((a, b) => (b.PTS ?? 0) - (a.PTS ?? 0))
+    .sort((a, b) => b.PTS - a.PTS)
     .slice(0, 10)
     .map(log => {
-      const player = playerDataService.getPlayerById(log.playerId);
-      return {
-        name: player?.name || 'Unknown Player',
-        PTS: Number(log.PTS?.toFixed(1) || 0),
-      };
-    });
+        const player = playerDataService.getPlayerById(log.playerId);
+        return {
+          playerId: player?.playerId ?? 0,
+          name: player?.name || 'Unknown Player',
+          PTS: Number(log.PTS.toFixed(1)),
+        };
+      });
+      
 
   return (
     <Box sx={{ px: 4, py: 6 }}>
