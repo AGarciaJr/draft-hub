@@ -3,6 +3,10 @@ import { playerDataService } from '../services/playerDataService';
 import { Box, Typography, TextField, Paper, Checkbox, FormControlLabel, Select, MenuItem, Button, Divider, Accordion, AccordionSummary, AccordionDetails, Container, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Stack } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import rawData from '../data/intern_project_data.json' with { type: 'json' }; // Import raw JSON data
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
 
 // Add ScoutRanking interface
 interface ScoutRanking {
@@ -40,6 +44,10 @@ interface PlayerBio {
   age?: number;
   currentTeam?: string;
   league?: string;
+  firstName: string;
+  lastName: string;
+  birthDate: string;
+  highSchool: string;
   [key: string]: unknown;
 }
 
@@ -75,13 +83,26 @@ const AdminDashboard: React.FC = () => {
     leagueType: 'All',
     nationality: 'All'
   });
+  const [playerAction, setPlayerAction] = useState('');
+  const [showAddDialog, setShowAddDialog] = useState(false);
+  const [newPlayer, setNewPlayer] = useState({
+    name: '',
+    currentTeam: '',
+    league: '',
+    height: '',
+    weight: '',
+    nationality: '',
+    leagueType: '',
+  });
+  // Use a local state for players in the Players tab
+  const [localPlayers, setLocalPlayers] = useState(playerDataService.getAllPlayers());
 
   const stats = playerDataService.getPlayerStats();
   const allPlayers = useMemo(() => playerDataService.getAllPlayers(), []);
 
   // Derived state based on search and filters
   const filteredPlayers = useMemo(() => {
-    let players = allPlayers;
+    let players = localPlayers;
 
     // Apply search term
     if (searchTerm) {
@@ -100,7 +121,7 @@ const AdminDashboard: React.FC = () => {
     // Age range filtering would go here
 
     return players;
-  }, [allPlayers, searchTerm, filters]);
+  }, [localPlayers, searchTerm, filters]);
 
   // Calculate average ranking for a player from grouped data
   const calculateAverageRank = (playerGroupedData: { scoutRankings?: ScoutRanking[] } & { [category: string]: unknown[] | unknown }) => {
@@ -314,6 +335,47 @@ const AdminDashboard: React.FC = () => {
 
     return filteredEntries;
   }, [groupedRawData, rawDataSortBy, rawDataFilter]);
+
+  // Handle action perform
+  const handlePerformAction = () => {
+    if (playerAction === 'delete') {
+      setLocalPlayers(prev => prev.filter(p => !selectedPlayers.includes(p.playerId)));
+      setSelectedPlayers([]);
+      setPlayerAction('');
+    } else if (playerAction === 'add') {
+      setShowAddDialog(true);
+    }
+  };
+
+  // Handle add player dialog actions
+  const handleAddPlayer = () => {
+    setLocalPlayers(prev => [
+      ...prev,
+      {
+        playerId: Math.max(0, ...prev.map(p => p.playerId)) + 1,
+        name: newPlayer.name,
+        currentTeam: newPlayer.currentTeam,
+        league: newPlayer.league,
+        height: Number(newPlayer.height),
+        weight: Number(newPlayer.weight),
+        nationality: newPlayer.nationality,
+        leagueType: newPlayer.leagueType,
+        firstName: '',
+        lastName: '',
+        birthDate: '',
+        highSchool: '',
+        photoUrl: '',
+        class: '',
+        age: undefined,
+        highSchoolState: '',
+        homeTown: '',
+        homeState: '',
+        homeCountry: '',
+      }
+    ]);
+    setShowAddDialog(false);
+    setNewPlayer({ name: '', currentTeam: '', league: '', height: '', weight: '', nationality: '', leagueType: '' });
+  };
 
   // Overview Content using MUI Components
   const overviewContent = (
@@ -660,10 +722,14 @@ const AdminDashboard: React.FC = () => {
               {/* Filter/Action Bar */}
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 2, gap: 2 }}>
                 <Typography variant="h6">Actions:</Typography>
-                <Select size="small" value="" displayEmpty> {/* Add actions here */}
+                <Select size="small" value={playerAction} onChange={e => setPlayerAction(e.target.value)} sx={{ minWidth: 180 }}>
                   <MenuItem value="">Select Action from Drop-down</MenuItem>
+                  <MenuItem value="delete">Delete Players</MenuItem>
+                  <MenuItem value="add">Add Players</MenuItem>
                 </Select>
-                <Button variant="contained" size="small">Perform</Button>
+                <Button variant="contained" size="small" onClick={handlePerformAction} disabled={!playerAction || (playerAction === 'delete' && selectedPlayers.length === 0)}>
+                  Perform
+                </Button>
 
                 <Typography variant="h6" sx={{ ml: 'auto' }}>Sort by:</Typography>
                 <Select size="small" value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
@@ -722,6 +788,67 @@ const AdminDashboard: React.FC = () => {
                   ))}
                 </Box>
               </Box>
+
+              {/* Add Player Dialog */}
+              <Dialog open={showAddDialog} onClose={() => setShowAddDialog(false)}>
+                <DialogTitle>Add New Player</DialogTitle>
+                <DialogContent>
+                  <TextField
+                    autoFocus
+                    margin="dense"
+                    label="Name"
+                    fullWidth
+                    value={newPlayer.name}
+                    onChange={e => setNewPlayer({ ...newPlayer, name: e.target.value })}
+                  />
+                  <TextField
+                    margin="dense"
+                    label="Current Team"
+                    fullWidth
+                    value={newPlayer.currentTeam}
+                    onChange={e => setNewPlayer({ ...newPlayer, currentTeam: e.target.value })}
+                  />
+                  <TextField
+                    margin="dense"
+                    label="League"
+                    fullWidth
+                    value={newPlayer.league}
+                    onChange={e => setNewPlayer({ ...newPlayer, league: e.target.value })}
+                  />
+                  <TextField
+                    margin="dense"
+                    label="Height (inches)"
+                    fullWidth
+                    value={newPlayer.height}
+                    onChange={e => setNewPlayer({ ...newPlayer, height: e.target.value })}
+                  />
+                  <TextField
+                    margin="dense"
+                    label="Weight (lbs)"
+                    fullWidth
+                    value={newPlayer.weight}
+                    onChange={e => setNewPlayer({ ...newPlayer, weight: e.target.value })}
+                  />
+                  <TextField
+                    margin="dense"
+                    label="Nationality"
+                    fullWidth
+                    value={newPlayer.nationality}
+                    onChange={e => setNewPlayer({ ...newPlayer, nationality: e.target.value })}
+                  />
+                  <TextField
+                    margin="dense"
+                    label="League Type"
+                    fullWidth
+                    value={newPlayer.leagueType}
+                    onChange={e => setNewPlayer({ ...newPlayer, leagueType: e.target.value })}
+                  />
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={() => setShowAddDialog(false)}>Cancel</Button>
+                  <Button onClick={handleAddPlayer} variant="contained">Add</Button>
+                </DialogActions>
+              </Dialog>
             </Box>
           </Box>
         )
