@@ -64,7 +64,7 @@ const ChartCarousel: React.FC = () => {
     .sort((a, b) => b.eFG - a.eFG)
     .slice(0, 10);
 
-  // Get top 10 three-point shooters
+  // Get top 10 players by total makes for scoring distribution
   const scoringDistributionData = latestSeasonLogs
     .map(log => {
       const player = playerDataService.getPlayerById(log.playerId);
@@ -72,8 +72,8 @@ const ChartCarousel: React.FC = () => {
         playerId: log.playerId,
         name: player?.name || 'Unknown Player',
         twoPointMakes: log.FG2M,
-        threePointMakes: log.FGM3,
-        freeThrowMakes: log.FTM,
+        threePointMakes: log['3PM'],
+        freeThrowMakes: log.FT,
       };
     })
     .sort((a, b) => (b.twoPointMakes + b.threePointMakes + b.freeThrowMakes) - (a.twoPointMakes + a.threePointMakes + a.freeThrowMakes))
