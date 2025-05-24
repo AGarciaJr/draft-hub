@@ -64,11 +64,12 @@ interface PlayerCardProps {
   ranking: { [key: string]: number | string | null } | undefined;
   avgRank: number;
   sortBy: string;
+  sortedPlayers: PlayerBio[];
+  trueRank: number | null;
 }
 
 const PlayerCard: React.FC<PlayerCardProps> = ({
   player,
-  index,
   condensed,
   expandedPlayerId,
   setExpandedPlayerId,
@@ -76,7 +77,8 @@ const PlayerCard: React.FC<PlayerCardProps> = ({
   scoutNames,
   ranking,
   avgRank,
-  sortBy,
+  sortedPlayers,
+  trueRank,
 }) => {
   const navigate = useNavigate();
 
@@ -95,6 +97,8 @@ const PlayerCard: React.FC<PlayerCardProps> = ({
   const schoolInfo = player.currentTeam && schoolColorsLogos.schools[player.currentTeam as keyof typeof schoolColorsLogos.schools];
   const schoolColor = (schoolInfo && typeof schoolInfo === 'object' && 'colors' in schoolInfo) ? schoolInfo.colors.primary : '#00538C';
   const schoolLogo = (schoolInfo && typeof schoolInfo === 'object' && 'logo' in schoolInfo) ? `/assets/logos/${schoolInfo.logo}` : '';
+
+  const displayRank = trueRank ?? null;
 
   return (
     <Paper elevation={3} sx={{ borderRadius: 3, overflow: 'hidden', mb: 4 }}>
@@ -124,19 +128,17 @@ const PlayerCard: React.FC<PlayerCardProps> = ({
         </Box>
 
         <Chip
-            label={
-                sortBy === 'avgRank'
-                ? `Rank ${index + 1}`
-                : `Rank ${ranking?.[sortBy] ?? 'N/A'}`
-            }
-            sx={{
-                fontWeight: 700,
-                fontSize: '1rem',
-                bgcolor: '#fff',
-                color: schoolColor,
-                ml: 2
-            }}
+          label={`Rank ${displayRank ?? 'N/A'}`}
+          sx={{
+            fontWeight: 700,
+            fontSize: '1rem',
+            bgcolor: '#fff',
+            color: schoolColor,
+            ml: 2
+          }}
         />
+
+
       </Box>
 
       {!condensed && (

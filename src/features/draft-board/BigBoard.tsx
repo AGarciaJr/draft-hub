@@ -78,6 +78,48 @@ const BigBoard: React.FC = () => {
     return scouts;
   }, []);
 
+  const playerTrueRanks = useMemo(() => {
+    const sorted = [...playerBios];
+  
+    // Sort players based on the current sortBy criteria
+    sorted.sort((a, b) => {
+      const rankingA = getPlayerScoutRanking(a.playerId);
+      const rankingB = getPlayerScoutRanking(b.playerId);
+  
+      if (!rankingA && !rankingB) return 0;
+      if (!rankingA) return 1;
+      if (!rankingB) return -1;
+  
+      if (sortBy === 'avgRank') {
+        const avgA = calculateAverageRank(rankingA).avg;
+        const avgB = calculateAverageRank(rankingB).avg;
+        return avgA - avgB || calculateAverageRank(rankingB).count - calculateAverageRank(rankingA).count; // Tie-breaking by number of scout ranks
+      } else {
+        const rankA = Number(rankingA[sortBy]);
+        const rankB = Number(rankingB[sortBy]);
+        // Handle cases where ranks might be NaN or null, pushing them to the end
+        const valA = isNaN(rankA) ? Infinity : rankA;
+        const valB = isNaN(rankB) ? Infinity : rankB;
+        return valA - valB;
+      }
+    });
+  
+    const map = new Map<number, number | null>();
+    sorted.forEach((player, i) => {
+      if (sortBy === 'avgRank') {
+        // When sorting by average rank, store the sequential rank (1, 2, 3...)
+        map.set(player.playerId, i + 1);
+      } else {
+        // When sorting by a specific scout, store that scout's actual rank
+        const ranking = getPlayerScoutRanking(player.playerId);
+        const scoutRank = ranking?.[sortBy] ?? null;
+        map.set(player.playerId, scoutRank !== null ? Number(scoutRank) : null);
+      }
+    });
+  
+    return map;
+  }, [sortBy]); // Dependency on sortBy
+
   // Update the sortedPlayers useMemo to include new filters
   const sortedPlayers = useMemo(() => {
     let filteredPlayers = [...playerBios];
@@ -124,14 +166,10 @@ const BigBoard: React.FC = () => {
       if (sortBy === 'avgRank') {
         const rankDataA = calculateAverageRank(rankingA);
         const rankDataB = calculateAverageRank(rankingB);
-        if (rankDataA.avg !== rankDataB.avg) return rankDataA.avg - rankDataB.avg;
-        return rankDataB.count - rankDataA.count;
+        return rankDataA.avg - rankDataB.avg || rankDataB.count - rankDataA.count;
       } else {
         const rankA = Number(rankingA[sortBy]);
         const rankB = Number(rankingB[sortBy]);
-        if (isNaN(rankA) && isNaN(rankB)) return 0;
-        if (isNaN(rankA)) return 1;
-        if (isNaN(rankB)) return -1;
         return rankA - rankB;
       }
     });
@@ -192,6 +230,8 @@ const BigBoard: React.FC = () => {
               ranking={ranking}
               avgRank={playerAvgRank}
               sortBy={sortBy}
+              sortedPlayers={sortedPlayers}
+              trueRank={playerTrueRanks.get(player.playerId) ?? null}
             />
           );
         })}
