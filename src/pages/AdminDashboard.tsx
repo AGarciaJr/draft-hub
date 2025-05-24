@@ -438,11 +438,11 @@ const AdminDashboard: React.FC = () => {
 
   // Raw Data Content
   const rawDataContent = (
-    <Box sx={{ p: 2 }}>
-      <Typography variant="h5" component="h2" gutterBottom>Raw Data by Player</Typography>
+    <Box sx={{ bgcolor: 'white', p: 3, borderRadius: 2, mb: 4 }}>
+      <Typography variant="h5" component="h2" gutterBottom sx={{ mb: 2 }}>Raw Data by Player</Typography>
       
       {/* Controls */}
-      <Stack direction="row" spacing={2} sx={{ mb: 3 }}>
+      <Stack direction="row" spacing={2} sx={{ mb: 3, alignItems: 'center' }}>
         <TextField
           size="small"
           label="Search Players"
@@ -573,7 +573,11 @@ const AdminDashboard: React.FC = () => {
   );
 
   return (
-    <Container maxWidth="xl" sx={{ mt: 2 }}>
+    <Box sx={{ px: 2, py: 4 }}>
+      <Typography variant="h4" component="h1" gutterBottom sx={{ color: '#fff' }}>
+        Admin Dashboard
+      </Typography>
+
       {/* Tab Navigation */}
       <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 2 }}>
         <Box sx={{ display: 'flex', gap: 2 }}>
@@ -731,7 +735,7 @@ const AdminDashboard: React.FC = () => {
       }
       {/* Add content for other tabs here */}
 
-    </Container>
+    </Box>
   );
 };
 
