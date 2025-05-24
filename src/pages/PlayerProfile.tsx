@@ -6,7 +6,7 @@ import { Box, Typography, Container } from '@mui/material';
 import ScoutingReportForm from '../components/scouting/ScoutingReportForm';
 import ScoutingReportList from '../components/scouting/ScoutingReportList';
 import PlayerInfo from '../components/player/PlayerInfo';
-import PlayerStatCard from '../components/player/PlayerStatCard';
+import StatCard from '../components/player/StatCard';
 import type { ScoutingReport } from '../types/player.types';
 import playerSummaries from '../data/player_summaries.json' with { type: 'json' };
 import scrapedPositions from '../data/processed/scraped_positions.json' with { type: 'json' };
@@ -64,7 +64,7 @@ const PlayerProfile: React.FC = () => {
           playerSummary={playerSummary}
           position={position}
         />
-        <PlayerStatCard
+        <StatCard
           stats={playerStats || {
             gamesPlayed: 0,
             totals: {
@@ -88,6 +88,7 @@ const PlayerProfile: React.FC = () => {
               minutes: 0,
             }
           }}
+          playerId={numericPlayerId}
         />
       </Box>
 

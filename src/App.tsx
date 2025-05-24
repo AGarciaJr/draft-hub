@@ -5,6 +5,7 @@ import BigBoard from './features/draft-board/BigBoard';
 import AdminDashboard from './pages/AdminDashboard';
 import ProfilesPage from './pages/ProfilesPage';
 import PlayerProfile from './pages/PlayerProfile';
+import PlayerStatProfile from './pages/PlayerStatProfile';
 import NavBar from './components/layout/NavBar';
 import Hero from './components/home/Hero';
 import Stats from './features/stat-board/Stats';
@@ -74,6 +75,7 @@ function App() {
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/profiles" element={<ProfilesPage />} />
           <Route path="/profiles/:playerId" element={<PlayerProfile />} />
+          <Route path="/stat-profiles/:playerId" element={<PlayerStatProfile />} />
         </Routes>
       </Box>
     </ThemeProvider>

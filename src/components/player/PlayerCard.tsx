@@ -77,7 +77,6 @@ const PlayerCard: React.FC<PlayerCardProps> = ({
   scoutNames,
   ranking,
   avgRank,
-  sortedPlayers,
   trueRank,
 }) => {
   const navigate = useNavigate();
