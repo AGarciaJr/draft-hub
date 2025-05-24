@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Box, Container, ToggleButtonGroup, ToggleButton } from '@mui/material';
 import { playerDataService } from '../services/playerDataService';
+import { usePageTooltips } from '../components/onboarding-tooltips/usePageTooltips';
 import GameLogsTable from '../components/player/GameLogsTable';
 import SeasonLogsTable from '../components/player/SeasonLogsTable';
 import PlayerStatCard from '../components/player/PlayerStatCard';
@@ -13,6 +14,7 @@ const PlayerStatProfile: React.FC = () => {
   const seasonLogs = playerDataService.getPlayerSeasonLogs(numericPlayerId);
   const player = playerDataService.getPlayerById(numericPlayerId);
   const [viewMode, setViewMode] = useState<'game' | 'season'>('game');
+  usePageTooltips('playerStatProfile');
 
   if (!player) {
     return null;

@@ -7,10 +7,11 @@ import {
   adminDashboardTooltips,
   draftBoardTooltips,
   statsTooltips,
+  playerStatProfileTooltips,
 } from './tooltipConfigs';
 
 export const usePageTooltips = (
-  pageName: 'home' | 'profiles' | 'playerProfile' | 'adminDashboard' | 'draftBoard' | 'stats'
+  pageName: 'home' | 'profiles' | 'playerProfile' | 'adminDashboard' | 'draftBoard' | 'stats' | 'playerStatProfile'
 ) => {
   const { startTour } = useTooltip();
 
@@ -24,6 +25,7 @@ export const usePageTooltips = (
       adminDashboard: adminDashboardTooltips,
       draftBoard: draftBoardTooltips,
       stats: statsTooltips,
+      playerStatProfile: playerStatProfileTooltips,
     }[pageName];
 
     console.log('[usePageTooltips] Starting tour with steps:', {
